@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hackathon.codechefapp.R;
+import com.hackathon.codechefapp.listener.OnItemClickListener;
 import com.hackathon.codechefapp.model.search.Content;
 import com.hackathon.codechefapp.utils.DisplayToast;
 
@@ -19,11 +20,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     private ArrayList<Content> searchData;
 
+    private static OnItemClickListener onItemClickListener;
+
     public SearchAdapter( ArrayList<Content> searchData ) {
         this.searchData = searchData;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView fullname;
         private TextView username;
 
@@ -31,8 +34,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             super(view);
             username = view.findViewById(R.id.codechefUsername);
             fullname = view.findViewById(R.id.fullname);
+
+            view.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View view) {
+            if( onItemClickListener!=null ) {
+                onItemClickListener.onItemClick( view , getAdapterPosition() );
+            }
+        }
     }
 
 
@@ -43,21 +54,28 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-
         holder.fullname.setText( searchData.get(position).getUsernameCamelCase() );
         holder.username.setText( searchData.get(position).getUsername() );
+    }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //DisplayToast.make( SearchAdapter.this, holder.username.getText().toString()).show();
-            }
-        });
+    public void setItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     @Override
     public int getItemCount() {
         return searchData.size();
+    }
+
+    public void clear() {
+        if(searchData!=null) {
+            searchData.clear();
+            searchData = null;
+        }
+
+        if(onItemClickListener!=null) {
+            onItemClickListener = null;
+        }
     }
 
 }

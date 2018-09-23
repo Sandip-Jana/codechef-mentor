@@ -1,6 +1,8 @@
 
 package com.hackathon.codechefapp.model.search;
 
+import android.util.Log;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -32,20 +34,23 @@ public class Content {
     }
 
     public String getUsernameCamelCase() {
-        StringTokenizer stk = new StringTokenizer(getFullname() ," ");
+        String trimmedName = getFullname().trim();
+        Log.d("name" , " " + trimmedName);
+        StringTokenizer stk = new StringTokenizer(trimmedName ," ");
         int countTokens = stk.countTokens();
-        String fullName = "";
+        String name = "";
         for(int i=0 ; i<countTokens ; i++) {
             String token = stk.nextToken();
             if(token.length()>0) {
                 String firstChar = token.substring(0, 1).toUpperCase();
                 String remainingChars = token.substring(1);
-                fullName = fullName + firstChar + remainingChars;
+                name = name + firstChar + remainingChars;
                 if (i != countTokens - 1) {
-                    fullName += " ";
+                    name += " ";
                 }
             }
         }
-        return fullName;
+        Log.d("name" , name);
+        return name;
     }
 }
