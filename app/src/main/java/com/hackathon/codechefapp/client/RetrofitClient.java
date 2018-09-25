@@ -12,6 +12,7 @@ import com.hackathon.codechefapp.utils.NetworkCheck;
 
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -71,6 +72,33 @@ public class RetrofitClient {
                 .baseUrl(URLConstants.BASE_API2)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
+                .build();
+
+    }
+
+    public Retrofit getAlibabaCookiesApi(final Context context) {
+
+        if (!NetworkCheck.isConnected(context)) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    DisplayToast.make(context.getApplicationContext(), context.getString(R.string.no_internet));
+                }
+            });
+        }
+
+        OkHttpClient.Builder okhttpbuilder = new OkHttpClient.Builder();
+
+        OkHttpClient.Builder okHttpClient = okhttpbuilder.readTimeout(Constants.READ_TIMEOUT, TimeUnit.SECONDS)
+                .connectTimeout(Constants.WRITE_TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(Constants.WRITE_TIMEOUT, TimeUnit.SECONDS);
+        okHttpClient.interceptors().add( new AddCookiesInterceptor(context));
+        okHttpClient.interceptors().add( new ReceivedCookiesInterceptor(context));
+
+        return new Retrofit.Builder()
+                .baseUrl(URLConstants.BASE_API2)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient.build())
                 .build();
 
     }

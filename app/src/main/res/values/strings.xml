@@ -39,7 +39,7 @@
     <string name="no_data">no_data</string>
     <string name="database_error">database error</string>
     <string name="student_request_pending">student request pending</string>
-    <string name="accepted">Accepted</string>
+    <string name="approved">Start Chatting</string>
     <string name="my_approved_students">My Students</string>
     <string name="pending_requests">Pending Requests</string>
     <string name="my_approved_mentors">My Mentors</string>

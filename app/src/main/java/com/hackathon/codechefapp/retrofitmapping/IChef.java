@@ -1,11 +1,13 @@
 package com.hackathon.codechefapp.retrofitmapping;
 
 import com.hackathon.codechefapp.dao.AccessTokenBody;
+import com.hackathon.codechefapp.dao.chat.ChatAuthResponse;
 import com.hackathon.codechefapp.model.alibaba.friendRequest.SendRequestBody;
 import com.hackathon.codechefapp.model.alibaba.friendRequest.SendRequestResponse;
 import com.hackathon.codechefapp.model.alibaba.mentor_student.MentorOrStudent;
 import com.hackathon.codechefapp.model.alibaba.mentor_student.StudentAcceptRejectBody;
 import com.hackathon.codechefapp.model.alibaba.myRelationshipApi.UserRelations;
+import com.hackathon.codechefapp.model.chat.ChatAuthBody;
 import com.hackathon.codechefapp.model.login.AccessToken;
 import com.hackathon.codechefapp.model.profile.Profile;
 import com.hackathon.codechefapp.model.search.Search;
@@ -23,6 +25,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
+import static com.hackathon.codechefapp.constants.URLConstants.CHAT_AUTHENTICATE;
 import static com.hackathon.codechefapp.constants.URLConstants.GET_CODECHEF_PROFILE;
 import static com.hackathon.codechefapp.constants.URLConstants.GET_MENTORS;
 import static com.hackathon.codechefapp.constants.URLConstants.GET_STUDENTS;
@@ -70,10 +73,17 @@ public interface IChef {
     @GET(GET_MENTORS)
     Call<MentorOrStudent> mentorApi(@Query("current_user") String username);
 
+    @Headers("Content-Type: application/json")
+    @GET(GET_MENTORS)
+    Call<MentorOrStudent> mentorApi2();
 
     @Headers("Content-Type: application/json")
     @PUT(REQUEST_PUT_API)
     Call<SendRequestResponse> putRequestAcceptedOrRejected(@Path("username") String username , @Body StudentAcceptRejectBody body);
+
+    @Headers("Content-Type: application/json")
+    @POST(CHAT_AUTHENTICATE)
+    Call<ChatAuthResponse> chatAuthentication(@Body ChatAuthBody Body);
 
 
 }

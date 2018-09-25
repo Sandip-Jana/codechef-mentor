@@ -36,6 +36,10 @@ import com.hackathon.codechefapp.client.RetrofitClient;
 import com.hackathon.codechefapp.constants.Constants;
 import com.hackathon.codechefapp.constants.PreferenceConstants;
 import com.hackathon.codechefapp.custom.ZoomOutPageTransformer;
+import com.hackathon.codechefapp.dao.UserProfileData;
+import com.hackathon.codechefapp.dao.chat.ChatAuthResponse;
+import com.hackathon.codechefapp.model.alibaba.mentor_student.MentorOrStudent;
+import com.hackathon.codechefapp.model.chat.ChatAuthBody;
 import com.hackathon.codechefapp.model.profile.Content;
 import com.hackathon.codechefapp.model.profile.Profile;
 import com.hackathon.codechefapp.model.profile.SubmissionStats;
@@ -46,6 +50,7 @@ import com.hackathon.codechefapp.utils.DisplayToast;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -248,7 +253,7 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
     }
 
     private void renderProfileDetailsToUI(Profile profile) {
-        if (!profile.getStatus().toLowerCase().trim().equalsIgnoreCase(Constants.RESPONSE_OK)) {
+        if (profile!=null && !profile.getStatus().toLowerCase().trim().equalsIgnoreCase(Constants.RESPONSE_OK)) {
             return;
         }
         Content content = profile.getResult().getData().getContent();
@@ -285,19 +290,22 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
         int acceptedSubmissions = stats.getAcceptedSubmissions();
         int partiallySolvedProblems = stats.getPartiallySolvedProblems();
 
-        ArrayList<MyData> submissionsList = new ArrayList<>();
-        submissionsList.add(new MyData("Solved", solvedProblems));
-        submissionsList.add(new MyData("Attempted", attemptedProblems));
-        submissionsList.add(new MyData("Submitted", submittedSolutions));
-        submissionsList.add(new MyData("WA", wrongSubmissions));
-        submissionsList.add(new MyData("RTE", runTimeError));
-        submissionsList.add(new MyData("TLE", timeLimitExceed));
-        submissionsList.add(new MyData("CE", compilationError));
-        submissionsList.add(new MyData("partialSubmission", partiallySolvedSubmissions));
-        submissionsList.add(new MyData("AC", acceptedSubmissions));
-        submissionsList.add(new MyData("partiallySolved", partiallySolvedProblems));
+        if (submittedSolutions != 0)
+            pieChart.setVisibility(View.VISIBLE);
 
-        pieChart.setUsePercentValues(true);
+
+        ArrayList<UserProfileData> submissionsList = new ArrayList<>();
+        submissionsList.add(new UserProfileData("Solved", solvedProblems));
+        submissionsList.add(new UserProfileData("Attempted", attemptedProblems));
+        submissionsList.add(new UserProfileData("Submitted", submittedSolutions));
+        submissionsList.add(new UserProfileData("WA", wrongSubmissions));
+        submissionsList.add(new UserProfileData("RTE", runTimeError));
+        submissionsList.add(new UserProfileData("TLE", timeLimitExceed));
+        submissionsList.add(new UserProfileData("CE", compilationError));
+        submissionsList.add(new UserProfileData("partial", partiallySolvedSubmissions + partiallySolvedProblems));
+        submissionsList.add(new UserProfileData("AC", acceptedSubmissions));
+
+        pieChart.setUsePercentValues(false);
         pieChart.getDescription().setEnabled(false);
         pieChart.setExtraOffsets(5, 10, 5, 5);
 
@@ -318,19 +326,12 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
         pieChart.setDrawCenterText(true);
 
         pieChart.setRotationAngle(0);
-        // enable rotation of the chart by touch
+
         pieChart.setRotationEnabled(true);
         pieChart.setHighlightPerTapEnabled(true);
 
-        // mChart.setUnit(" €");
-        // mChart.setDrawUnitsInChart(true);
-
-        // add a selection listener
         pieChart.setOnChartValueSelectedListener(this);
 
-        //setData(4, 100);
-
-        // adding DATA
 
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
 
@@ -338,7 +339,7 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
             entries.add(new PieEntry((float) submissionsList.get(i).getData(), submissionsList.get(i).getLabel(), getResources().getDrawable(R.drawable.star)));
         }
 
-        PieDataSet dataSet = new PieDataSet(entries, "User submissions explored");
+        PieDataSet dataSet = new PieDataSet(entries, "User submissions");
 
         dataSet.setDrawIcons(false);
 
@@ -415,36 +416,64 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
     }
 
     public void startChatActicity() {
-        Intent intent = new Intent(CodechefUser.this, ChatActivity.class);
-        startActivity(intent);
+        //testing phas
+
+        Retrofit retrofit = new RetrofitClient().getAlibabaCookiesApi(this);
+        IChef chef = retrofit.create(IChef.class);
+
+        ChatAuthBody body = new ChatAuthBody();
+        body.setCurrentUser(prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME,""));
+
+        Call<ChatAuthResponse>  chatAuth = chef.chatAuthentication(body);
+
+        chatAuth.enqueue(new Callback<ChatAuthResponse>() {
+            @Override
+            public void onResponse(Call<ChatAuthResponse> call, Response<ChatAuthResponse> response) {
+                if(response.isSuccessful() && response!=null && response.body()!=null) {
+                        Headers header = response.headers();
+
+                        Intent intent = new Intent(CodechefUser.this, ChatActivity.class);
+                        startActivity(intent);
+                        Log.d("yay" , "successfull");
+                        //startFunc();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ChatAuthResponse> call, Throwable t) {
+                DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView() , getString(R.string.error_message));
+            }
+        });
+
+        // ends phase
+
+//        Intent intent = new Intent(CodechefUser.this, ChatActivity.class);
+//        startActivity(intent);
     }
 
-    static class MyData {
-
-        private String label;
-        private int data;
-
-        MyData(String label, int data) {
-            this.label = label;
-            this.data = data;
-        }
-
-        public String getLabel() {
-            return label;
-        }
-
-        public void setLabel(String label) {
-            this.label = label;
-        }
-
-        public int getData() {
-            return data;
-        }
-
-        public void setData(int data) {
-            this.data = data;
-        }
-
+    private void startFunc(){
+        getListOfapprovedMentors();
     }
+
+    private void getListOfapprovedMentors() {
+        Retrofit retrofit = new RetrofitClient().getAlibabaCookiesApi(this);
+        IChef ichef = retrofit.create(IChef.class);
+        Call<MentorOrStudent> approvedMentorApi = ichef.mentorApi2();
+
+        approvedMentorApi.enqueue(new Callback<MentorOrStudent>() {
+            @Override
+            public void onResponse(Call<MentorOrStudent> call, Response<MentorOrStudent> response) {
+                if (response.isSuccessful() && response != null && response.body() != null) {
+                    Log.d("yo " , "behnchod");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MentorOrStudent> call, Throwable t) {
+                DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), String.valueOf(R.string.error_message));
+            }
+        });
+    }
+
 
 }

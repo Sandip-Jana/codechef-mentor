@@ -13,7 +13,7 @@
         android:layout_marginRight="75dp"
         android:background="@drawable/rounded_btn_primary"
         android:textColor="@android:color/white"
-        android:text="@string/accepted"
+        android:text="@string/approved"
         android:clickable="false"/>
 
 </LinearLayout>

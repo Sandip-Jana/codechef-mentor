@@ -14,4 +14,6 @@ public final class PreferenceConstants {
 
     public static final String LOGGED_IN_USER_NAME = "user_name_logged_in";
 
+    public static final String COOKIES = "cookies";
+
 }

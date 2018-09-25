@@ -6,14 +6,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.hackathon.codechefapp.R;
+import com.hackathon.codechefapp.activities.chat.ChatActivity;
 import com.hackathon.codechefapp.client.RetrofitClient;
 import com.hackathon.codechefapp.constants.PreferenceConstants;
 import com.hackathon.codechefapp.dao.AccessTokenBody;
@@ -26,7 +25,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-
 
 /**
  * Created by SANDIP JANA on 09-09-2018.
@@ -47,14 +45,14 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        imageView =  findViewById(R.id.codechefBanner);
-        loginBtn =  findViewById(R.id.loginBtn);
-        progressBarLogin =  findViewById(R.id.progressBarLogin);
+        imageView = findViewById(R.id.codechefBanner);
+        loginBtn = findViewById(R.id.loginBtn);
+        progressBarLogin = findViewById(R.id.progressBarLogin);
 
         prefs = SharedPreferenceUtils.getInstance(getApplicationContext());
 
-        if( prefs!=null && prefs.contains(PreferenceConstants.ACCESS_TOKEN_UPDATED) &&
-                prefs.getBoolanValue(PreferenceConstants.ACCESS_TOKEN_UPDATED , true )  ) {
+        if (prefs != null && prefs.contains(PreferenceConstants.ACCESS_TOKEN_UPDATED) &&
+                prefs.getBoolanValue(PreferenceConstants.ACCESS_TOKEN_UPDATED, true)) {
             gotoMainActivity();
         }
 
@@ -122,7 +120,7 @@ public class Login extends AppCompatActivity {
 
         final IChef ichef = retrofitClient.create(IChef.class);
 
-        Call<AccessToken> requestToken = ichef.getAccessToken( getAccessTokenBody(authCode) );
+        Call<AccessToken> requestToken = ichef.getAccessToken(getAccessTokenBody(authCode));
 
         requestToken.enqueue(new Callback<AccessToken>() {
             @Override
@@ -131,11 +129,10 @@ public class Login extends AppCompatActivity {
                 int statusCode = response.code();
                 if (response.isSuccessful()) {
 
-                    parseAccessTokenAndRefreshToken( response );
+                    parseAccessTokenAndRefreshToken(response);
 
-                }
-                else {
-                    DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView() , getString(R.string.error_message));
+                } else {
+                    DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), getString(R.string.error_message));
                 }
             }
 
@@ -152,23 +149,22 @@ public class Login extends AppCompatActivity {
     }
 
     private void parseAccessTokenAndRefreshToken(Response<AccessToken> response) {
-        if(response==null || response.body()==null ) {
-            DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView() , getString(R.string.unsuccessfull_login));
+        if (response == null || response.body() == null) {
+            DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), getString(R.string.unsuccessfull_login));
             return;
         }
 
         AccessToken tokens = response.body();
-        if( tokens.getStatus().equalsIgnoreCase("OK") ) {
-                    String access_token = tokens.getResult().getData().getAccessToken();
-                    int expires_in   = tokens.getResult().getData().getExpiresIn();
-                    String token_type   = tokens.getResult().getData().getTokenType();
-                    String scope        = tokens.getResult().getData().getScope();
-                    String refresh_token= tokens.getResult().getData().getRefreshToken();
-                    Log.d(TAG , "AccessToken = " + access_token + "\n" + token_type + "\n" + scope + "\n" + refresh_token+ " \n" + expires_in);
-                    gotoMainPage(  access_token ,  refresh_token );
-        }
-        else {
-            DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView() , getString(R.string.unsuccessfull_login));
+        if (tokens.getStatus().equalsIgnoreCase("OK")) {
+            String access_token = tokens.getResult().getData().getAccessToken();
+            int expires_in = tokens.getResult().getData().getExpiresIn();
+            String token_type = tokens.getResult().getData().getTokenType();
+            String scope = tokens.getResult().getData().getScope();
+            String refresh_token = tokens.getResult().getData().getRefreshToken();
+            Log.d(TAG, "AccessToken = " + access_token + "\n" + token_type + "\n" + scope + "\n" + refresh_token + " \n" + expires_in);
+            gotoMainPage(access_token, refresh_token);
+        } else {
+            DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), getString(R.string.unsuccessfull_login));
             return;
         }
     }
@@ -183,26 +179,26 @@ public class Login extends AppCompatActivity {
         return accessTokenBody;
     }
 
-    private void gotoMainPage(String accessToken , String refreshToken ) {
-        updatePreferences( accessToken , refreshToken );
+    private void gotoMainPage(String accessToken, String refreshToken) {
+        updatePreferences(accessToken, refreshToken);
 
         gotoMainActivity();
     }
 
-    private void updatePreferences( String accessToken , String refreshToken ) {
-        if( prefs!=null ) {
-            Log.d(TAG  , "Updated Preferences");
+    private void updatePreferences(String accessToken, String refreshToken) {
+        if (prefs != null) {
+            Log.d(TAG, "Updated Preferences");
 
             prefs.clear();
 
-            prefs.setValue(PreferenceConstants.ACCESS_TOKEN_UPDATED , true);
-            prefs.setValue(PreferenceConstants.ACCESS_TOKEN , accessToken);
-            prefs.setValue(PreferenceConstants.REFRESH_TOKEN , refreshToken);
+            prefs.setValue(PreferenceConstants.ACCESS_TOKEN_UPDATED, true);
+            prefs.setValue(PreferenceConstants.ACCESS_TOKEN, accessToken);
+            prefs.setValue(PreferenceConstants.REFRESH_TOKEN, refreshToken);
         }
     }
 
     private void gotoMainActivity() {
-        Intent intent = new Intent( this , MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }

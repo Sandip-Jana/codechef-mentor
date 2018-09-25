@@ -28,4 +28,6 @@ public final class URLConstants {
 
     public static final String REQUEST_PUT_API = "user/{username}";
 
+    public static final String CHAT_AUTHENTICATE = "users/authenticate";
+
 }

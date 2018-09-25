@@ -7,6 +7,10 @@ package com.hackathon.codechefapp.preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.hackathon.codechefapp.constants.PreferenceConstants;
+
+import java.util.HashSet;
+
 public class SharedPreferenceUtils {
     private static SharedPreferenceUtils mSharedPreferenceUtils;
     protected Context mContext;
@@ -129,6 +133,14 @@ public class SharedPreferenceUtils {
      */
     public boolean getBoolanValue(String keyFlag, boolean defaultValue) {
         return mSharedPreferences.getBoolean(keyFlag, defaultValue);
+    }
+
+    public HashSet<String> getCookies() {
+        return (HashSet<String>) mSharedPreferences.getStringSet(PreferenceConstants.COOKIES, new HashSet<String>());
+    }
+
+    public boolean setCookies(HashSet<String> cookies) {
+        return mSharedPreferencesEditor.putStringSet(PreferenceConstants.COOKIES, cookies).commit();
     }
 
     /**

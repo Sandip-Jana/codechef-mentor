@@ -2,11 +2,21 @@ package com.hackathon.codechefapp.activities.chat;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hackathon.codechefapp.R;
+import com.hackathon.codechefapp.adapter.ChatAdapter;
+import com.hackathon.codechefapp.constants.PreferenceConstants;
+import com.hackathon.codechefapp.dao.chat.Message;
+import com.hackathon.codechefapp.preferences.SharedPreferenceUtils;
+import com.hackathon.codechefapp.utils.DisplayToast;
 import com.hosopy.actioncable.ActionCable;
 import com.hosopy.actioncable.ActionCableException;
 import com.hosopy.actioncable.Channel;
@@ -15,168 +25,186 @@ import com.hosopy.actioncable.Subscription;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import br.net.bmobile.websocketrails.WebSocketRailsChannel;
-import br.net.bmobile.websocketrails.WebSocketRailsDispatcher;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
 
     private static final String TAG = ChatActivity.class.getSimpleName();
 
-    Consumer consumer;
+    private ArrayList<Message> messageList = new ArrayList<>();
 
-    Subscription subscription;
+    private RecyclerView chatRecyclerView;
+    private ChatAdapter chatAdapter;
+
+    private EditText editTextChat;
+    private Button sendButton;
+
+    private Consumer consumer;
+    private Subscription subscription;
+
+    private SharedPreferenceUtils prefs;
+
+    private boolean isConnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        //startChat();
+        editTextChat = findViewById(R.id.editTextChatbox);
+        sendButton = findViewById(R.id.sendBtn);
 
+        chatRecyclerView = findViewById(R.id.chatRecyclerView);
+        chatRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        chatAdapter = new ChatAdapter(this, messageList);
+
+        chatRecyclerView.setAdapter(chatAdapter);
+
+        prefs = SharedPreferenceUtils.getInstance(getApplicationContext());
+
+        URI uri = null;
         try {
-            startChatLibraryTest();
-        } catch (Exception e) {
-            Log.d(TAG, e.getLocalizedMessage() + "exception occured");
+            uri = new URI("http://149.129.138.172/cable");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
-    }
 
-    private void startChatLibraryTest() throws Exception {
+        Consumer.Options options = new Consumer.Options();
+        Map<String, String> headers = new HashMap();
+        HashSet<String> preferences = SharedPreferenceUtils.getInstance(this).getCookies();
+        for (String cookie : preferences) {
+            headers.put("Cookie", cookie);
+        }
+        options.headers = headers;
 
+        Consumer consumer = ActionCable.createConsumer(uri, options);
 
-        //step 1
-        URI uri = new URI("http://149.129.138.172/cable");
-        consumer = ActionCable.createConsumer(uri);
-
-
-        //step 2
         Channel appearanceChannel = new Channel("ChatChannel");
         subscription = consumer.getSubscriptions().create(appearanceChannel);
 
-        //step 3
-        subscription
-                .onConnected(new Subscription.ConnectedCallback() {
-                    @Override
-                    public void call() {
-                        Log.d(TAG , "yes i am connected");
-                        sendMessage();
+        consumer.connect();
 
-                    }
-                }).onRejected(new Subscription.RejectedCallback() {
+        addListeners();
+    }
+
+    private void addListeners() {
+
+        subscription.onConnected(new Subscription.ConnectedCallback() {
             @Override
             public void call() {
-                Log.d(TAG , "yes in call method");
+                Log.d(TAG, "Subscription connected");
+                isConnected = true;
+            }
+        }).onRejected(new Subscription.RejectedCallback() {
+            @Override
+            public void call() {
+
             }
         }).onReceived(new Subscription.ReceivedCallback() {
             @Override
             public void call(JsonElement data) {
-                // Called when the subscription receives data from the server
-                Log.d(TAG , "subscription receives data from the server "  + data  );
+                Log.d(TAG, "Subscription Message Received");
+                receiveMessage(data);
             }
         }).onDisconnected(new Subscription.DisconnectedCallback() {
             @Override
             public void call() {
-                // Called when the subscription has been closed
-                Log.d(TAG , "subscription receives data from the server");
+                Log.d(TAG, "Subscription Disconnected");
             }
         }).onFailed(new Subscription.FailedCallback() {
             @Override
             public void call(ActionCableException e) {
-                // Called when the subscription encounters any error
-                Log.d(TAG , "subscription receives data from the server");
+                Log.d(TAG, "Subscription error message");
             }
         });
 
 
-        // 4. Establish connection
-        consumer.connect();
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isConnected && editTextChat.getText().toString().trim().length() > 0) {
+                    //send message
+                    final JsonObject params = new JsonObject();
+                    params.addProperty("message", editTextChat.getText().toString());
+                    subscription.perform("send_message", params);
 
-        Log.d(TAG , "running");
+//                    Message message = new Message();
+//                    message.setCurrentUser(true);
+//                    message.setMessage(String.valueOf(params.get("message")));
+//                    message.setTime(Calendar.getInstance().getTime() + "");
+//                    messageList.add(message);
+
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//
+//                            chatAdapter = new ChatAdapter(getApplicationContext(), messageList);
+//                            chatRecyclerView.swapAdapter(chatAdapter, false);
+//
+//                            editTextChat.setText("");
+//                        }
+//                    });
+                } else if (!isConnected) {
+                    onBackPressed();
+                    DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), "Connection problem");
+                } else {
+                    DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), "Message cant be empty");
+                }
+            }
+        });
 
     }
 
+    private void receiveMessage(JsonElement params) {
 
-    private void sendMessage() {
+        final Message message = new Message();
+        String senderName = (params.getAsJsonObject().get("sender_name").toString());
+        if (senderName.toLowerCase().trim().equalsIgnoreCase(prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME, "").toLowerCase().trim()) ||
+                senderName.toLowerCase().trim().contains(prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME, "").toLowerCase().trim())) {
+            message.setCurrentUser(true);
+        } else {
+            message.setCurrentUser(false);
+        }
+        message.setSenderName(senderName);
+        message.setMessage(params.getAsJsonObject().get("message").toString());
+        message.setTime(params.getAsJsonObject().get("time").toString());
 
-        Log.d(TAG , "Sending Message");
-        JsonObject params = new JsonObject();
-        params.addProperty("message", "Jaadu ho Gya Yeeeee");
-        //5. ok
-        subscription.perform("send_message" , params);
-        Log.d(TAG , " Message sent");
+        messageList.add(message);
+        chatAdapter = new ChatAdapter(getApplicationContext(), messageList);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                chatRecyclerView.swapAdapter(chatAdapter, true);
+                if( message.isCurrentUser() ) {
+                    editTextChat.setText("");
+                }
+            }
+        });
     }
 
-    private void startChat() {
-//        try {
-//            dispatcher = new WebSocketRailsDispatcher(new URL("http://149.129.138.172/cable"));
-//            dispatcher.connect();
-//
-//            while (!dispatcher.getState().toLowerCase().trim().equalsIgnoreCase("connected")) {
-//                String id = dispatcher.getConnectionId();
-//                Log.d("Chini Test", dispatcher.getState());
-//            }
-//
-//            webSocketRailsChannel = dispatcher.subscribe("ChatChannel");
-//
-//            if (dispatcher.isSubscribed("ChatChannel")) {
-//                Message message = new Message();
-//
-//                message.setMessage("Hiiiii Chinmoy");
-//
-//                webSocketRailsChannel.trigger("send_message", message);
-//
-//                webSocketRailsChannel.bind("send_message", new WebSocketRailsDataCallback() {
-//
-//                    @Override
-//                    public void onDataAvailable(Object data) {
-//                        Log.d("Chini Test", "callback data received");
-//                    }
-//                });
-//
-//            }
-//
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
     }
 
     @Override
     public void onDestroy() {
 
-        Log.d("Chini Test", "ok");
-//        dispatcher.unsubscribe("ChatChannel");
-//
-//        dispatcher.disconnect();
+        isConnected = false;
+        if (consumer != null)
+            consumer.getSubscriptions().remove(subscription);
 
-        consumer.getSubscriptions().remove(subscription);
-
-        consumer.disconnect();
+        if (consumer != null)
+            consumer.disconnect();
 
         super.onDestroy();
 
     }
-
-//    private class Message {
-//
-//        String name;
-//        String message;
-//
-//        public String getName() {
-//            return name;
-//        }
-//
-//        public void setName(String name) {
-//            this.name = name;
-//        }
-//
-//        public String getMessage() {
-//            return message;
-//        }
-//
-//        public void setMessage(String message) {
-//            this.message = message;
-//        }
-//
-//    }
-
 }
+
+
