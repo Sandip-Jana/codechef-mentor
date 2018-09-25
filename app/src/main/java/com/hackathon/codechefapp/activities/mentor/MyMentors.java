@@ -30,6 +30,8 @@ public class MyMentors extends AppCompatActivity {
         mentorTabLayout = findViewById(R.id.mentorsTabLayout);
         mentorPager = findViewById(R.id.mentorPager);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         MentorTabPagerAdapter adapter = new MentorTabPagerAdapter(this , getSupportFragmentManager());
         mentorPager.setAdapter(adapter);
 

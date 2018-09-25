@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.hackathon.codechefapp.R;
-import com.hackathon.codechefapp.activities.chat.ChatActivity;
 import com.hackathon.codechefapp.client.RetrofitClient;
 import com.hackathon.codechefapp.constants.PreferenceConstants;
 import com.hackathon.codechefapp.dao.AccessTokenBody;
@@ -48,6 +47,8 @@ public class Login extends AppCompatActivity {
         imageView = findViewById(R.id.codechefBanner);
         loginBtn = findViewById(R.id.loginBtn);
         progressBarLogin = findViewById(R.id.progressBarLogin);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         prefs = SharedPreferenceUtils.getInstance(getApplicationContext());
 
@@ -161,7 +162,7 @@ public class Login extends AppCompatActivity {
             String token_type = tokens.getResult().getData().getTokenType();
             String scope = tokens.getResult().getData().getScope();
             String refresh_token = tokens.getResult().getData().getRefreshToken();
-            Log.d(TAG, "AccessToken = " + access_token + "\n" + token_type + "\n" + scope + "\n" + refresh_token + " \n" + expires_in);
+            Log.d(TAG, "AccessToken = " + access_token + "\n" + token_type + "\n" + scope + "\n refreshToken" + refresh_token + " \n" + expires_in);
             gotoMainPage(access_token, refresh_token);
         } else {
             DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), getString(R.string.unsuccessfull_login));
@@ -198,7 +199,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void gotoMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, Home.class);
         startActivity(intent);
         finish();
     }

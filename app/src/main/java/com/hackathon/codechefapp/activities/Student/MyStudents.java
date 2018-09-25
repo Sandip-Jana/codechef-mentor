@@ -31,6 +31,8 @@ public class MyStudents extends AppCompatActivity {
         studentTabLayout = findViewById(R.id.studentTabs);
         studentPager = findViewById(R.id.studentPager);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         StudentTabPagerAdapter adapter = new StudentTabPagerAdapter(this, getSupportFragmentManager());
         studentPager.setAdapter(adapter);
 

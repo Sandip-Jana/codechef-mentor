@@ -34,9 +34,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName().toString();
+    private static final String TAG = Home.class.getSimpleName().toString();
     private DrawerLayout drawer;
     private FloatingActionButton fab;
     private Toolbar toolbar;
@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mentorCard = contentMain.findViewById(R.id.mentorCard);
         studentCard = contentMain.findViewById(R.id.studentCard);
         searchCard = contentMain.findViewById(R.id.searchCard);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         prefs = SharedPreferenceUtils.getInstance(getApplicationContext());
 
@@ -177,15 +179,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_manage) {
 
+        } else if (id == R.id.nav_logout) {
+            startLoginActivity();
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void startLoginActivity() {
+        prefs.clear();
+        Intent intent = new Intent(this , Login.class);
+        startActivity(intent);
     }
 
     private void startMyMentorActivity()  {
@@ -207,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (!prefs.contains(PreferenceConstants.USER_PROFILE)) {
             DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), "Unable to fetch User Details.");
         } else {
-            Intent intent = new Intent(MainActivity.this , UserProfile.class);
+            Intent intent = new Intent(Home.this , UserProfile.class);
             startActivity(intent);
         }
     }

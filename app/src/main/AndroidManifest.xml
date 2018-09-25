@@ -32,9 +32,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.Home"
             android:hardwareAccelerated="true"
-            android:label="@string/title_activity_main"
+            android:label="@string/app_title"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.SearchUser.SearchActivity" />
         <activity android:name=".activities.SearchUser.UserProfile" />

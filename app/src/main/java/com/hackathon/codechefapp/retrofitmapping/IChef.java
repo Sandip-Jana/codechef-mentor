@@ -1,6 +1,7 @@
 package com.hackathon.codechefapp.retrofitmapping;
 
 import com.hackathon.codechefapp.dao.AccessTokenBody;
+import com.hackathon.codechefapp.dao.RefreshTokenBody;
 import com.hackathon.codechefapp.dao.chat.ChatAuthResponse;
 import com.hackathon.codechefapp.model.alibaba.friendRequest.SendRequestBody;
 import com.hackathon.codechefapp.model.alibaba.friendRequest.SendRequestResponse;
@@ -44,6 +45,11 @@ public interface IChef {
     @Headers("content-Type: application/json")
     @POST(OATH)
     Call<AccessToken> getAccessToken(@Body AccessTokenBody body);
+
+    @Headers("content-Type: application/json")
+    @POST(OATH)
+    Call<AccessToken> getRefreshToken(@Body RefreshTokenBody body);
+
 
     @Headers("Accept: application/json")
     @GET(PROFILE)

@@ -72,6 +72,8 @@ public class UserProfile extends AppCompatActivity implements OnChartValueSelect
 
         prefs = SharedPreferenceUtils.getInstance(getApplicationContext());
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         username = findViewById(R.id.username);
 
         allContestRating = findViewById(R.id.allContestRating);

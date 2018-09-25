@@ -43,6 +43,8 @@
     <string name="my_approved_students">My Students</string>
     <string name="pending_requests">Pending Requests</string>
     <string name="my_approved_mentors">My Mentors</string>
+    <string name="app_title">Codechef Mentor</string>
+    <string name="refresh_token">refresh_token</string>
 
     <!-- Next -->
 

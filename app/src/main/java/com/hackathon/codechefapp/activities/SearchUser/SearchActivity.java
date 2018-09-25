@@ -67,6 +67,8 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
         progressBarSearch = findViewById(R.id.progressBarSearch);
         searchRecyclerView = findViewById(R.id.searchRecyclerView);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         searchRecyclerView.setHasFixedSize(false);
 
         layoutManager = new LinearLayoutManager(this);

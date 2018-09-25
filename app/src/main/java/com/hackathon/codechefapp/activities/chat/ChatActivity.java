@@ -57,6 +57,8 @@ public class ChatActivity extends AppCompatActivity {
         editTextChat = findViewById(R.id.editTextChatbox);
         sendButton = findViewById(R.id.sendBtn);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         chatRecyclerView = findViewById(R.id.chatRecyclerView);
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -132,22 +134,6 @@ public class ChatActivity extends AppCompatActivity {
                     params.addProperty("message", editTextChat.getText().toString());
                     subscription.perform("send_message", params);
 
-//                    Message message = new Message();
-//                    message.setCurrentUser(true);
-//                    message.setMessage(String.valueOf(params.get("message")));
-//                    message.setTime(Calendar.getInstance().getTime() + "");
-//                    messageList.add(message);
-
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//
-//                            chatAdapter = new ChatAdapter(getApplicationContext(), messageList);
-//                            chatRecyclerView.swapAdapter(chatAdapter, false);
-//
-//                            editTextChat.setText("");
-//                        }
-//                    });
                 } else if (!isConnected) {
                     onBackPressed();
                     DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), "Connection problem");
@@ -161,17 +147,18 @@ public class ChatActivity extends AppCompatActivity {
 
     private void receiveMessage(JsonElement params) {
 
+        JsonObject jsonObject = params.getAsJsonObject();
         final Message message = new Message();
-        String senderName = (params.getAsJsonObject().get("sender_name").toString());
-        if (senderName.toLowerCase().trim().equalsIgnoreCase(prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME, "").toLowerCase().trim()) ||
-                senderName.toLowerCase().trim().contains(prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME, "").toLowerCase().trim())) {
+        String senderName = jsonObject.get("sender_name").getAsString();
+        if (senderName.toLowerCase().trim().equalsIgnoreCase(prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME, "").toLowerCase().trim())) {
             message.setCurrentUser(true);
         } else {
             message.setCurrentUser(false);
         }
+
         message.setSenderName(senderName);
-        message.setMessage(params.getAsJsonObject().get("message").toString());
-        message.setTime(params.getAsJsonObject().get("time").toString());
+        message.setMessage(jsonObject.get("message").getAsString());
+        message.setTime(jsonObject.get("time").getAsString());
 
         messageList.add(message);
         chatAdapter = new ChatAdapter(getApplicationContext(), messageList);
@@ -179,7 +166,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void run() {
                 chatRecyclerView.swapAdapter(chatAdapter, true);
-                if( message.isCurrentUser() ) {
+                if (message.isCurrentUser()) {
                     editTextChat.setText("");
                 }
             }
@@ -203,7 +190,6 @@ public class ChatActivity extends AppCompatActivity {
             consumer.disconnect();
 
         super.onDestroy();
-
     }
 }
 

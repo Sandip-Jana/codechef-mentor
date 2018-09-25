@@ -102,6 +102,8 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
 
         prefs = SharedPreferenceUtils.getInstance(getApplicationContext());
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         user = findViewById(R.id.userLayout);
 
         username = findViewById(R.id.username);
