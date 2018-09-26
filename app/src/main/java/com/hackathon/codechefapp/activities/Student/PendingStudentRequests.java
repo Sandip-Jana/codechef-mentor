@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hackathon.codechefapp.R;
-import com.hackathon.codechefapp.activities.SearchUser.PendingStudentRequest;
 import com.hackathon.codechefapp.adapter.StudentRequestAdapter;
 import com.hackathon.codechefapp.client.RetrofitClient;
 import com.hackathon.codechefapp.constants.Constants;
@@ -63,7 +62,7 @@ public class PendingStudentRequests extends Fragment implements OnItemClickListe
         prefs = SharedPreferenceUtils.getInstance(activity.getApplicationContext());
 
         if (prefs.contains(PreferenceConstants.LOGGED_IN_USER_NAME))
-            getPendingStudentRequests(prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME, ""));
+            getPendingStudentRequests();
     }
 
     @Override
@@ -76,10 +75,10 @@ public class PendingStudentRequests extends Fragment implements OnItemClickListe
         super.onDetach();
     }
 
-    private void getPendingStudentRequests(String userName) {
-        Retrofit retrofit = new RetrofitClient().getAlibaba(activity);
+    private void getPendingStudentRequests() {
+        Retrofit retrofit = new RetrofitClient().getAlibabaCookiesApi(activity);
         IChef ichef = retrofit.create(IChef.class);
-        Call<MentorOrStudent> pendingStudentApi = ichef.studentApi(userName);
+        Call<MentorOrStudent> pendingStudentApi = ichef.studentApi();
 
         pendingStudentApi.enqueue(new Callback<MentorOrStudent>() {
             @Override
@@ -133,7 +132,7 @@ public class PendingStudentRequests extends Fragment implements OnItemClickListe
     }
 
     private void callPutApiAcceptReject(final String username, final String status) {
-        Retrofit retrofit = new RetrofitClient().getAlibaba(activity);
+        Retrofit retrofit = new RetrofitClient().getAlibabaCookiesApi(activity);
         IChef ichef = retrofit.create(IChef.class);
 
         StudentAcceptRejectBody body = new StudentAcceptRejectBody();

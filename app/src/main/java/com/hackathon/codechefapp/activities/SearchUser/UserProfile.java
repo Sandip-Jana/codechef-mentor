@@ -2,8 +2,8 @@ package com.hackathon.codechefapp.activities.SearchUser;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
@@ -81,7 +81,7 @@ public class UserProfile extends AppCompatActivity implements OnChartValueSelect
         myGlobalRank = findViewById(R.id.myGlobalRank);
         myCountryRank = findViewById(R.id.myCountryRank);
 
-        longChallengeRating =  findViewById(R.id.longChallengeRating);
+        longChallengeRating = findViewById(R.id.longChallengeRating);
         cookOffRating = findViewById(R.id.cookOffRating);
         lunchTimeRating = findViewById(R.id.lunchTimeRating);
 
@@ -89,23 +89,23 @@ public class UserProfile extends AppCompatActivity implements OnChartValueSelect
         cookOffGlobalRank = findViewById(R.id.cookOffGlobalRank);
         lunchTimeGlobalRank = findViewById(R.id.lunchTimeGlobalRank);
 
-        longChallengeCountryRank =   findViewById(R.id.longChallengeCountryRank);
-        cookOffCountryRank =  findViewById(R.id.cookOffCountryRank);
-        lunchTimeCountryRank =  findViewById(R.id.lunchTimeCountryRank);
+        longChallengeCountryRank = findViewById(R.id.longChallengeCountryRank);
+        cookOffCountryRank = findViewById(R.id.cookOffCountryRank);
+        lunchTimeCountryRank = findViewById(R.id.lunchTimeCountryRank);
 
         pieChart = findViewById(R.id.pieChart);
 
-        if( !prefs.contains(PreferenceConstants.USER_PROFILE) ) {
-            Log.d(TAG , "User not logged in");
+        if (!prefs.contains(PreferenceConstants.USER_PROFILE)) {
+            Log.d(TAG, "User not logged in");
         } else {
-            String userProfle = prefs.getStringValue(PreferenceConstants.USER_PROFILE , "");
-            Profile profile = new Gson().fromJson(userProfle , Profile.class);
-            renderProfileDetailsToUI( profile );
+            String userProfle = prefs.getStringValue(PreferenceConstants.USER_PROFILE, "");
+            Profile profile = new Gson().fromJson(userProfle, Profile.class);
+            renderProfileDetailsToUI(profile);
         }
     }
 
-    private void renderProfileDetailsToUI( Profile profile ) {
-        if( !profile.getStatus().toLowerCase().trim().equalsIgnoreCase(Constants.RESPONSE_OK) ) {
+    private void renderProfileDetailsToUI(Profile profile) {
+        if (!profile.getStatus().toLowerCase().trim().equalsIgnoreCase(Constants.RESPONSE_OK)) {
             return;
         }
         Content content = profile.getResult().getData().getContent();

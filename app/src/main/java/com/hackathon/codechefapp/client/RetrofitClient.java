@@ -50,31 +50,31 @@ public class RetrofitClient {
 
     }
 
-    public Retrofit getAlibaba(final Context context) {
-
-        if (!NetworkCheck.isConnected(context)) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    DisplayToast.make(context.getApplicationContext(), context.getString(R.string.no_internet));
-                }
-            });
-        }
-
-        OkHttpClient.Builder okhttpbuilder = new OkHttpClient.Builder();
-
-        OkHttpClient okHttpClient = okhttpbuilder.readTimeout(Constants.READ_TIMEOUT, TimeUnit.SECONDS)
-                .connectTimeout(Constants.WRITE_TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(Constants.WRITE_TIMEOUT, TimeUnit.SECONDS)
-                .build();
-
-        return new Retrofit.Builder()
-                .baseUrl(URLConstants.BASE_API2)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-
-    }
+//    public Retrofit getAlibaba(final Context context) {
+//
+//        if (!NetworkCheck.isConnected(context)) {
+//            new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    DisplayToast.make(context.getApplicationContext(), context.getString(R.string.no_internet));
+//                }
+//            });
+//        }
+//
+//        OkHttpClient.Builder okhttpbuilder = new OkHttpClient.Builder();
+//
+//        OkHttpClient okHttpClient = okhttpbuilder.readTimeout(Constants.READ_TIMEOUT, TimeUnit.SECONDS)
+//                .connectTimeout(Constants.WRITE_TIMEOUT, TimeUnit.SECONDS)
+//                .writeTimeout(Constants.WRITE_TIMEOUT, TimeUnit.SECONDS)
+//                .build();
+//
+//        return new Retrofit.Builder()
+//                .baseUrl(URLConstants.BASE_API2)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .client(okHttpClient)
+//                .build();
+//
+//    }
 
     public Retrofit getAlibabaCookiesApi(final Context context) {
 

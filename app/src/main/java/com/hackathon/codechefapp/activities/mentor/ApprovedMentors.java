@@ -60,7 +60,7 @@ public class ApprovedMentors extends Fragment implements OnItemClickListener {
         prefs = SharedPreferenceUtils.getInstance(activity.getApplicationContext());
 
         if (prefs.contains(PreferenceConstants.LOGGED_IN_USER_NAME))
-            getListOfapprovedMentors(prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME, ""));
+            getListOfapprovedMentors();
     }
 
     @Override
@@ -73,10 +73,10 @@ public class ApprovedMentors extends Fragment implements OnItemClickListener {
         super.onDetach();
     }
 
-    private void getListOfapprovedMentors(String userName) {
-        Retrofit retrofit = new RetrofitClient().getAlibaba(activity);
+    private void getListOfapprovedMentors() {
+        Retrofit retrofit = new RetrofitClient().getAlibabaCookiesApi(activity);
         IChef ichef = retrofit.create(IChef.class);
-        Call<MentorOrStudent> approvedMentorApi = ichef.mentorApi(userName);
+        Call<MentorOrStudent> approvedMentorApi = ichef.mentorApi();
 
         approvedMentorApi.enqueue(new Callback<MentorOrStudent>() {
             @Override
@@ -123,7 +123,7 @@ public class ApprovedMentors extends Fragment implements OnItemClickListener {
     @Override
     public void onItemClick(View view, int position) {
         if (approvedMentors != null && approvedMentors.size() > position) {
-            startActivityCodechefUser(approvedMentors.get(position).getUsername(), Constants.APPROVED_STATUS+Constants.DELIMETER+Constants.MENTOR);
+            startActivityCodechefUser(approvedMentors.get(position).getUsername(), Constants.APPROVED_STATUS + Constants.DELIMETER + Constants.MENTOR);
         }
     }
 

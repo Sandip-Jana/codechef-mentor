@@ -10,15 +10,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "mentor_name",
-        "current_user"
+        "current_user",
+        "mentor_name"
 })
 public class SendRequestBody {
 
     @JsonProperty("mentor_name")
     private String mentor_name;
-    @JsonProperty("current_user")
-    private String current_user;
 
     @JsonProperty("mentor_name")
     public String getMentor_name() {
@@ -29,14 +27,5 @@ public class SendRequestBody {
     public void setMentor_name(String mentor_name) {
         this.mentor_name = mentor_name;
     }
-
-    @JsonProperty("current_user")
-    public String getCurrent_user() {
-        return current_user;
-    }
-
-    @JsonProperty("current_user")
-    public void setCurrent_user(String current_user) {
-        this.current_user = current_user;
-    }
+    
 }

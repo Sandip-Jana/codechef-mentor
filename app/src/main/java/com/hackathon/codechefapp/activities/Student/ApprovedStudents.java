@@ -60,7 +60,7 @@ public class ApprovedStudents extends Fragment implements OnItemClickListener {
         prefs = SharedPreferenceUtils.getInstance(activity.getApplicationContext());
 
         if (prefs.contains(PreferenceConstants.LOGGED_IN_USER_NAME))
-            getListOfapprovedStudents(prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME, ""));
+            getListOfapprovedStudents();
     }
 
 
@@ -74,10 +74,10 @@ public class ApprovedStudents extends Fragment implements OnItemClickListener {
         super.onDetach();
     }
 
-    private void getListOfapprovedStudents(String userName) {
-        Retrofit retrofit = new RetrofitClient().getAlibaba(activity);
+    private void getListOfapprovedStudents() {
+        Retrofit retrofit = new RetrofitClient().getAlibabaCookiesApi(activity);
         IChef ichef = retrofit.create(IChef.class);
-        Call<MentorOrStudent> approvedStudentApi = ichef.studentApi(userName);
+        Call<MentorOrStudent> approvedStudentApi = ichef.studentApi();
 
         approvedStudentApi.enqueue(new Callback<MentorOrStudent>() {
             @Override
@@ -89,7 +89,7 @@ public class ApprovedStudents extends Fragment implements OnItemClickListener {
 
             @Override
             public void onFailure(Call<MentorOrStudent> call, Throwable t) {
-                    DisplayToast.makeSnackbar(getView().getRootView(), String.valueOf(R.string.error_message));
+                DisplayToast.makeSnackbar(getView().getRootView(), String.valueOf(R.string.error_message));
             }
         });
     }
@@ -134,7 +134,7 @@ public class ApprovedStudents extends Fragment implements OnItemClickListener {
 
     public void updateFragmentAdapter() {
         if (prefs.contains(PreferenceConstants.LOGGED_IN_USER_NAME))
-            getListOfapprovedStudents(prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME, ""));
+            getListOfapprovedStudents();
     }
 
 }

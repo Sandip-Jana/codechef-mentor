@@ -24,11 +24,14 @@ import com.hackathon.codechefapp.activities.Student.MyStudents;
 import com.hackathon.codechefapp.activities.mentor.MyMentors;
 import com.hackathon.codechefapp.client.RetrofitClient;
 import com.hackathon.codechefapp.constants.PreferenceConstants;
+import com.hackathon.codechefapp.dao.chat.ChatAuthResponse;
+import com.hackathon.codechefapp.model.chat.ChatAuthBody;
 import com.hackathon.codechefapp.model.profile.Profile;
 import com.hackathon.codechefapp.preferences.SharedPreferenceUtils;
 import com.hackathon.codechefapp.retrofitmapping.IChef;
 import com.hackathon.codechefapp.utils.DisplayToast;
 
+import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -77,8 +80,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         addListeners();
 
-        if( !prefs.contains(PreferenceConstants.USER_PROFILE) )
+        if (!prefs.contains(PreferenceConstants.USER_PROFILE)) {
             getUserProfile();
+        }
 
     }
 
@@ -192,12 +196,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void startLoginActivity() {
         prefs.clear();
-        Intent intent = new Intent(this , Login.class);
+        Intent intent = new Intent(this, Login.class);
         startActivity(intent);
     }
 
-    private void startMyMentorActivity()  {
-        Intent intent = new Intent(getApplicationContext() , MyMentors.class);
+    private void startMyMentorActivity() {
+        Intent intent = new Intent(getApplicationContext(), MyMentors.class);
         startActivity(intent);
     }
 
@@ -215,7 +219,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         if (!prefs.contains(PreferenceConstants.USER_PROFILE)) {
             DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), "Unable to fetch User Details.");
         } else {
-            Intent intent = new Intent(Home.this , UserProfile.class);
+            Intent intent = new Intent(Home.this, UserProfile.class);
             startActivity(intent);
         }
     }
@@ -263,17 +267,53 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         Profile profile = response.body();
 
-        addToPreferences( profile );
+        addToPreferences(profile);
 
         userName.setText(profile.getResult().getData().getContent().getUsername());
 
-        prefs.setValue(PreferenceConstants.LOGGED_IN_USER_NAME , userName.getText().toString());
+        prefs.setValue(PreferenceConstants.LOGGED_IN_USER_NAME, userName.getText().toString());
+
+        authenticateUser();
+    }
+
+    private void addToPreferences(Profile profile) {
+        String profilePrefs = new Gson().toJson(profile);
+        prefs.setValue(PreferenceConstants.USER_PROFILE, profilePrefs);
+    }
+
+    private void authenticateUser() {
+
+        Retrofit retrofit = new RetrofitClient().getAlibabaCookiesApi(this);
+        IChef chef = retrofit.create(IChef.class);
+
+        ChatAuthBody body = new ChatAuthBody();
+        body.setCurrentUser(prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME, ""));
+
+        Call<ChatAuthResponse> chatAuth = chef.chatAuthentication(body);
+
+        chatAuth.enqueue(new Callback<ChatAuthResponse>() {
+            @Override
+            public void onResponse(Call<ChatAuthResponse> call, Response<ChatAuthResponse> response) {
+                if (response.isSuccessful() && response != null && response.body() != null) {
+                    Headers header = response.headers();
+                    Log.d(TAG, "User authenticated for chat");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ChatAuthResponse> call, Throwable t) {
+                Log.d(TAG, "User not authenticated for chat");
+                DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), getString(R.string.error_message));
+            }
+        });
 
     }
 
-    private void addToPreferences( Profile profile ) {
-        String profilePrefs = new Gson().toJson(profile);
-        prefs.setValue(PreferenceConstants.USER_PROFILE , profilePrefs);
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (prefs != null && prefs.contains(PreferenceConstants.LOGGED_IN_USER_NAME) && !prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME, "").isEmpty())
+            userName.setText(prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME, ""));
     }
 
 }

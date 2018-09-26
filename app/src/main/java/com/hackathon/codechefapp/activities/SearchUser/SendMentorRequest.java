@@ -78,12 +78,11 @@ public class SendMentorRequest extends Fragment {
     private void sendMentorRequest() {
         progressBar.setVisibility(View.VISIBLE);
 
-        Retrofit retrofitClient = new RetrofitClient().getAlibaba(activity);
+        Retrofit retrofitClient = new RetrofitClient().getAlibabaCookiesApi(activity);
 
         IChef request = retrofitClient.create(IChef.class);
 
         SendRequestBody body = new SendRequestBody();
-        body.setCurrent_user(currentUser);
         body.setMentor_name(mentorUser);
 
         Call<SendRequestResponse> callSendRequestApi = request.sendMentorRequest(body);
@@ -92,9 +91,8 @@ public class SendMentorRequest extends Fragment {
             @Override
             public void onResponse(Call<SendRequestResponse> call, Response<SendRequestResponse> response) {
                 progressBar.setVisibility(View.INVISIBLE);
-                int statusCode = response.code();
-                if(response.isSuccessful() && response!=null && response.body()!=null) {
-                    parseResponse( response.body() );
+                if (response.isSuccessful() && response != null && response.body() != null) {
+                    parseResponse(response.body());
                 }
             }
 
@@ -106,17 +104,14 @@ public class SendMentorRequest extends Fragment {
 
     }
 
-    private void parseResponse( SendRequestResponse response ) {
-        if( response.getStatus().toLowerCase().trim().equalsIgnoreCase("success") ) {
-            DisplayToast.makeSnackbar(getView().getRootView() , "Mentor Request Sent");
+    private void parseResponse(SendRequestResponse response) {
+        if (response.getStatus().toLowerCase().trim().equalsIgnoreCase("success")) {
+            ((CodechefUser) activity).setMentorRequestSentStatus();
 
-            ((CodechefUser)activity).setMentorRequestSentStatus();
-
-        } else if( response.getReason()!=null )  {
-            DisplayToast.makeSnackbar(getView().getRootView() , response.getReason());
-        }
-        else {
-            DisplayToast.makeSnackbar(getView().getRootView() , "Mentor Request Not Sent..Try Again");
+        } else if (response.getReason() != null) {
+            DisplayToast.makeSnackbar(getView().getRootView(), response.getReason());
+        } else {
+            DisplayToast.makeSnackbar(getView().getRootView(), "Mentor Request Not Sent..Try Again");
         }
     }
 

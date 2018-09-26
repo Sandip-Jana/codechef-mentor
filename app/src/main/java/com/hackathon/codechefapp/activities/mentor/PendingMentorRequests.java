@@ -2,7 +2,6 @@ package com.hackathon.codechefapp.activities.mentor;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,7 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class PendingMentorRequests extends Fragment implements OnItemClickListener{
+public class PendingMentorRequests extends Fragment implements OnItemClickListener {
 
     private Activity activity;
 
@@ -63,7 +62,7 @@ public class PendingMentorRequests extends Fragment implements OnItemClickListen
         prefs = SharedPreferenceUtils.getInstance(activity.getApplicationContext());
 
         if (prefs.contains(PreferenceConstants.LOGGED_IN_USER_NAME))
-            getPendingMentorRequests(prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME, ""));
+            getPendingMentorRequests();
     }
 
     @Override
@@ -76,10 +75,10 @@ public class PendingMentorRequests extends Fragment implements OnItemClickListen
         super.onDetach();
     }
 
-    private void getPendingMentorRequests(String userName) {
-        Retrofit retrofit = new RetrofitClient().getAlibaba(activity);
+    private void getPendingMentorRequests() {
+        Retrofit retrofit = new RetrofitClient().getAlibabaCookiesApi(activity);
         IChef ichef = retrofit.create(IChef.class);
-        Call<MentorOrStudent> approvedMentorApi = ichef.mentorApi(userName);
+        Call<MentorOrStudent> approvedMentorApi = ichef.mentorApi();
 
         approvedMentorApi.enqueue(new Callback<MentorOrStudent>() {
             @Override
@@ -127,7 +126,7 @@ public class PendingMentorRequests extends Fragment implements OnItemClickListen
     @Override
     public void onItemClick(View view, int position) {
         if (pendingMentors != null && pendingMentors.size() > position) {
-            startActivityCodechefUser(pendingMentors.get(position).getUsername(), Constants.PENDING_STATUS+Constants.DELIMETER+Constants.MENTOR);
+            startActivityCodechefUser(pendingMentors.get(position).getUsername(), Constants.PENDING_STATUS + Constants.DELIMETER + Constants.MENTOR);
         }
     }
 

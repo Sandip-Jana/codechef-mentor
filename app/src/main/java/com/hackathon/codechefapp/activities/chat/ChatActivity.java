@@ -63,7 +63,6 @@ public class ChatActivity extends AppCompatActivity {
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         chatAdapter = new ChatAdapter(this, messageList);
-
         chatRecyclerView.setAdapter(chatAdapter);
 
         prefs = SharedPreferenceUtils.getInstance(getApplicationContext());
@@ -143,6 +142,20 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        chatRecyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int left, int top, int right, final int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (bottom < oldBottom) {
+                    chatRecyclerView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            chatRecyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
+                        }
+                    }, 100);
+                }
+            }
+        });
+
     }
 
     private void receiveMessage(JsonElement params) {
@@ -165,9 +178,12 @@ public class ChatActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                chatRecyclerView.swapAdapter(chatAdapter, true);
+                //chatAdapter.notifyItemInserted( chatAdapter.getItemCount()-1 );
+                chatRecyclerView.swapAdapter(chatAdapter, false);
+                chatRecyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
                 if (message.isCurrentUser()) {
                     editTextChat.setText("");
+                    //hideKeyboard
                 }
             }
         });

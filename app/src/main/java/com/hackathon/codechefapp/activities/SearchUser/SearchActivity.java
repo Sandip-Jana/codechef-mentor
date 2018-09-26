@@ -54,7 +54,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
 
     private SharedPreferenceUtils prefs;
 
-    private HashMap<String , String> hashRelations = new HashMap<>();
+    private HashMap<String, String> hashRelations = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
         prefs = SharedPreferenceUtils.getInstance(getApplicationContext());
 
         if (prefs.contains(PreferenceConstants.LOGGED_IN_USER_NAME))
-            fetchUserRelationShips(prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME, ""));
+            fetchUserRelationShips();
         else
             DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), "Could not fetch your relations");
 
@@ -169,8 +169,8 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
     @Override
     public void onItemClick(View view, int position) {
         if (searchData != null && searchData.size() > position) {
-            if( hashRelations.containsKey(searchData.get(position).getUsername()) )
-                startActivityCodechefUser(searchData.get(position).getUsername() , hashRelations.get(searchData.get(position).getUsername()));
+            if (hashRelations.containsKey(searchData.get(position).getUsername()))
+                startActivityCodechefUser(searchData.get(position).getUsername(), hashRelations.get(searchData.get(position).getUsername()));
             else
                 startActivityCodechefUser(searchData.get(position).getUsername());
         }
@@ -182,21 +182,21 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
         startActivity(intent);
     }
 
-    private void startActivityCodechefUser(String userName , String relationStatus) {
+    private void startActivityCodechefUser(String userName, String relationStatus) {
         Intent intent = new Intent(SearchActivity.this, CodechefUser.class);
         intent.putExtra(Constants.username, userName);
-        intent.putExtra(Constants.RELATION , relationStatus);
+        intent.putExtra(Constants.RELATION, relationStatus);
         startActivity(intent);
     }
 
-    private void fetchUserRelationShips(String userName) {
+    private void fetchUserRelationShips() {
         progressBarSearch.setVisibility(View.VISIBLE);
 
-        Retrofit retrofit = new RetrofitClient().getAlibaba(this);
+        Retrofit retrofit = new RetrofitClient().getAlibabaCookiesApi(this);
 
         IChef ichef = retrofit.create(IChef.class);
 
-        Call<UserRelations> fetchRelations = ichef.getUserRelations(userName);
+        Call<UserRelations> fetchRelations = ichef.getUserRelations();
 
         fetchRelations.enqueue(new Callback<UserRelations>() {
             @Override
@@ -222,7 +222,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
         if (response.getStatus().toLowerCase().trim().equalsIgnoreCase("success")) {
             List<RelationResponse> relationlist = response.getResponse();
             for (int i = 0; i < relationlist.size(); i++) {
-                hashRelations.put(relationlist.get(i).getUsername() , relationlist.get(i).getStatus() + Constants.DELIMETER + relationlist.get(i).getRelationship());
+                hashRelations.put(relationlist.get(i).getUsername(), relationlist.get(i).getStatus() + Constants.DELIMETER + relationlist.get(i).getRelationship());
             }
         }
     }
@@ -239,7 +239,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
     public void onResume() {
         super.onResume();
         if (prefs.contains(PreferenceConstants.LOGGED_IN_USER_NAME))
-            fetchUserRelationShips(prefs.getStringValue(PreferenceConstants.LOGGED_IN_USER_NAME, ""));
+            fetchUserRelationShips();
         else
             DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), "Could not fetch your relations");
     }

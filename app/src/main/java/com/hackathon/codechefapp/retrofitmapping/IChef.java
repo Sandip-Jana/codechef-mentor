@@ -23,7 +23,6 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 import static com.hackathon.codechefapp.constants.URLConstants.CHAT_AUTHENTICATE;
@@ -65,7 +64,7 @@ public interface IChef {
 
     @Headers("Content-Type: application/json")
     @GET(GET_USER_RELATIONS)
-    Call<UserRelations> getUserRelations(@Query("current_user") String userName);
+    Call<UserRelations> getUserRelations();
 
     @Headers("Content-Type: application/json")
     @GET(GET_CODECHEF_PROFILE)
@@ -73,19 +72,15 @@ public interface IChef {
 
     @Headers("Content-Type: application/json")
     @GET(GET_STUDENTS)
-    Call<MentorOrStudent> studentApi(@Query("current_user") String username);
+    Call<MentorOrStudent> studentApi();
 
     @Headers("Content-Type: application/json")
     @GET(GET_MENTORS)
-    Call<MentorOrStudent> mentorApi(@Query("current_user") String username);
-
-    @Headers("Content-Type: application/json")
-    @GET(GET_MENTORS)
-    Call<MentorOrStudent> mentorApi2();
+    Call<MentorOrStudent> mentorApi();
 
     @Headers("Content-Type: application/json")
     @PUT(REQUEST_PUT_API)
-    Call<SendRequestResponse> putRequestAcceptedOrRejected(@Path("username") String username , @Body StudentAcceptRejectBody body);
+    Call<SendRequestResponse> putRequestAcceptedOrRejected(@Path("username") String username, @Body StudentAcceptRejectBody body);
 
     @Headers("Content-Type: application/json")
     @POST(CHAT_AUTHENTICATE)
