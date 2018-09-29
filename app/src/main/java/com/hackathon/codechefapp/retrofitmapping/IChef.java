@@ -9,32 +9,43 @@ import com.hackathon.codechefapp.model.alibaba.mentor_student.MentorOrStudent;
 import com.hackathon.codechefapp.model.alibaba.mentor_student.StudentAcceptRejectBody;
 import com.hackathon.codechefapp.model.alibaba.myRelationshipApi.UserRelations;
 import com.hackathon.codechefapp.model.chat.ChatAuthBody;
+import com.hackathon.codechefapp.model.chat.RetrieveMessagesResponse;
+import com.hackathon.codechefapp.model.leaderboard.LeaderBoardResponse;
 import com.hackathon.codechefapp.model.login.AccessToken;
 import com.hackathon.codechefapp.model.profile.Profile;
 import com.hackathon.codechefapp.model.search.Search;
 
+import java.util.List;
 import java.util.Map;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 import static com.hackathon.codechefapp.constants.URLConstants.CHAT_AUTHENTICATE;
 import static com.hackathon.codechefapp.constants.URLConstants.GET_CODECHEF_PROFILE;
 import static com.hackathon.codechefapp.constants.URLConstants.GET_MENTORS;
+import static com.hackathon.codechefapp.constants.URLConstants.GET_PREVIOUS_MESSAGES;
 import static com.hackathon.codechefapp.constants.URLConstants.GET_STUDENTS;
 import static com.hackathon.codechefapp.constants.URLConstants.GET_USER_RELATIONS;
+import static com.hackathon.codechefapp.constants.URLConstants.LEADERBOARD;
 import static com.hackathon.codechefapp.constants.URLConstants.OATH;
 import static com.hackathon.codechefapp.constants.URLConstants.PROFILE;
 import static com.hackathon.codechefapp.constants.URLConstants.REQUEST_PUT_API;
 import static com.hackathon.codechefapp.constants.URLConstants.SEARCH_BY_USERNAME;
 import static com.hackathon.codechefapp.constants.URLConstants.SEND_MENTOR_REQUEST;
+import static com.hackathon.codechefapp.constants.URLConstants.UPLOAD_PROFILE_PIC;
 
 /**
  * Created by SANDIP JANA on 09-09-2018.
@@ -86,5 +97,15 @@ public interface IChef {
     @POST(CHAT_AUTHENTICATE)
     Call<ChatAuthResponse> chatAuthentication(@Body ChatAuthBody Body);
 
+    @Multipart
+    @POST(UPLOAD_PROFILE_PIC)
+    Call<Object> uploadProfilePic(@Part MultipartBody.Part image, @Part("name") RequestBody name);
 
+    @Headers("Content-Type: application/json")
+    @GET(GET_PREVIOUS_MESSAGES)
+    Call<List<RetrieveMessagesResponse>> getPreviousMessages(@Path("roomid") String roomId);
+
+    @Headers("Content-Type: application/json")
+    @GET(LEADERBOARD)
+    Call<List<LeaderBoardResponse>> getLeaderBoard(@Query("num") String usersCount);
 }

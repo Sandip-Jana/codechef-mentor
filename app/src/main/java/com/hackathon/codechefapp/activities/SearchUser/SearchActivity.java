@@ -56,6 +56,8 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
 
     private HashMap<String, String> hashRelations = new HashMap<>();
 
+    private HashMap<String, String> hashRoomId = new HashMap<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,7 +172,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
     public void onItemClick(View view, int position) {
         if (searchData != null && searchData.size() > position) {
             if (hashRelations.containsKey(searchData.get(position).getUsername()))
-                startActivityCodechefUser(searchData.get(position).getUsername(), hashRelations.get(searchData.get(position).getUsername()));
+                startActivityCodechefUser(searchData.get(position).getUsername(), hashRelations.get(searchData.get(position).getUsername()) , hashRoomId.get(searchData.get(position).getUsername()));
             else
                 startActivityCodechefUser(searchData.get(position).getUsername());
         }
@@ -182,10 +184,12 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
         startActivity(intent);
     }
 
-    private void startActivityCodechefUser(String userName, String relationStatus) {
+    private void startActivityCodechefUser(String userName, String relationStatus , String roomId) {
         Intent intent = new Intent(SearchActivity.this, CodechefUser.class);
         intent.putExtra(Constants.username, userName);
         intent.putExtra(Constants.RELATION, relationStatus);
+        intent.putExtra(Constants.ROOM_ID , roomId);
+
         startActivity(intent);
     }
 
@@ -223,6 +227,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
             List<RelationResponse> relationlist = response.getResponse();
             for (int i = 0; i < relationlist.size(); i++) {
                 hashRelations.put(relationlist.get(i).getUsername(), relationlist.get(i).getStatus() + Constants.DELIMETER + relationlist.get(i).getRelationship());
+                hashRoomId.put(relationlist.get(i).getUsername(), relationlist.get(i).getRoom_id());
             }
         }
     }

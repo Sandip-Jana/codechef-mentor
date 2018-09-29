@@ -117,7 +117,7 @@
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:layout_width="200dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="200dp"
                     android:layout_weight="40"
                     android:paddingLeft="40dp"
@@ -126,6 +126,39 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/discussionCard"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="2dp"
+                card_view:cardCornerRadius="4dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/discussionTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="20"
+                        android:gravity="center"
+                        android:text="@string/discussions"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="299dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="60"
+                        android:src="@drawable/discussion" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
     </ScrollView>

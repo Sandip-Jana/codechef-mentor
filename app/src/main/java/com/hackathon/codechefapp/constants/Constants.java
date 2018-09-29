@@ -30,6 +30,7 @@ public final class Constants {
 
     // is it a relation
     public static final String RELATION = "relation";
+    public static final String ROOM_ID = "room_id";
 
     // added for types of request status
     public static final String PENDING_STATUS = "pending";
@@ -39,5 +40,14 @@ public final class Constants {
     // student or mentor
     public static final String STUDENT = "student";
     public static final String MENTOR = "mentor";
+
+    //leaderboard
+    public static final String USERS_COUNT = "10";
+
+    //general chat rooms
+    public static final String GENERAL_CHAT_ROOM = "-1";
+    public static final String IOI_CHAT_ROOM = "-2";
+    public static final String ACM_CHAT_ROOM = "-3";
+    public static final String JOB_CHAT_ROOM = "-4";
 
 }

@@ -88,6 +88,8 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
 
     private PieChart pieChart;
 
+    private String roomId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +133,10 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
         }
 
         String username = (String) bundle.get(Constants.username);
+
+        // setting the value of roomId
+        if( bundle.containsKey(Constants.ROOM_ID) )
+            roomId = (String) bundle.get(Constants.ROOM_ID);
 
         setCodechefProfileUsername(username);
 
@@ -414,6 +420,11 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
 
     public void startChatActicity() {
         Intent intent = new Intent(CodechefUser.this, ChatActivity.class);
+        if(roomId==null) {
+            DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView() , "Room id could not be fetched");
+            return;
+        }
+        intent.putExtra(Constants.ROOM_ID , this.roomId);
         startActivity(intent);
     }
 

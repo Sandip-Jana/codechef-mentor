@@ -106,6 +106,7 @@ public class PendingMentorRequests extends Fragment implements OnItemClickListen
                     Content rowItem = new Content();
                     rowItem.setUsername(mentorResponselist.get(i).getUsername());
                     rowItem.setFullname("Codechef User");
+                    rowItem.setRoom_id(mentorResponselist.get(i).getRoomId());
 
                     pendingMentors.add(rowItem);
                 }
@@ -126,12 +127,12 @@ public class PendingMentorRequests extends Fragment implements OnItemClickListen
     @Override
     public void onItemClick(View view, int position) {
         if (pendingMentors != null && pendingMentors.size() > position) {
-            startActivityCodechefUser(pendingMentors.get(position).getUsername(), Constants.PENDING_STATUS + Constants.DELIMETER + Constants.MENTOR);
+            startActivityCodechefUser(pendingMentors.get(position).getUsername(), Constants.PENDING_STATUS + Constants.DELIMETER + Constants.MENTOR , pendingMentors.get(position).getRoom_id());
         }
     }
 
-    private void startActivityCodechefUser(String userName, String relationStatus) {
-        ((MyMentors) activity).startActivityCodechefUser(userName, relationStatus);
+    private void startActivityCodechefUser(String userName, String relationStatus, String roomId) {
+        ((MyMentors) activity).startActivityCodechefUser(userName, relationStatus , roomId);
     }
 
 

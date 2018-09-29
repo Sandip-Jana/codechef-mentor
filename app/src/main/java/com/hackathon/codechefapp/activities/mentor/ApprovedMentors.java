@@ -104,6 +104,7 @@ public class ApprovedMentors extends Fragment implements OnItemClickListener {
                     Content rowItem = new Content();
                     rowItem.setUsername(mentorResponselist.get(i).getUsername());
                     rowItem.setFullname("Codechef User");
+                    rowItem.setRoom_id(mentorResponselist.get(i).getRoomId());
 
                     approvedMentors.add(rowItem);
                 }
@@ -123,12 +124,12 @@ public class ApprovedMentors extends Fragment implements OnItemClickListener {
     @Override
     public void onItemClick(View view, int position) {
         if (approvedMentors != null && approvedMentors.size() > position) {
-            startActivityCodechefUser(approvedMentors.get(position).getUsername(), Constants.APPROVED_STATUS + Constants.DELIMETER + Constants.MENTOR);
+            startActivityCodechefUser(approvedMentors.get(position).getUsername(), Constants.APPROVED_STATUS + Constants.DELIMETER + Constants.MENTOR , approvedMentors.get(position).getRoom_id());
         }
     }
 
-    private void startActivityCodechefUser(String userName, String relationStatus) {
-        ((MyMentors) activity).startActivityCodechefUser(userName, relationStatus);
+    private void startActivityCodechefUser(String userName, String relationStatus , String roomId) {
+        ((MyMentors) activity).startActivityCodechefUser(userName, relationStatus , roomId);
     }
 
 }

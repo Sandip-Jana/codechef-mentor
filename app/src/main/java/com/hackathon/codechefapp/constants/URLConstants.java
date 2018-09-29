@@ -30,4 +30,10 @@ public final class URLConstants {
 
     public static final String CHAT_AUTHENTICATE = "users/authenticate";
 
+    public static final String UPLOAD_PROFILE_PIC = "rails/active_storage/direct_uploads";
+
+    public static final String GET_PREVIOUS_MESSAGES = "chats/{roomid}";
+
+    public static final String LEADERBOARD = "leaderboard";
+
 }

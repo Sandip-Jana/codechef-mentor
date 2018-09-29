@@ -106,6 +106,7 @@ public class PendingStudentRequests extends Fragment implements OnItemClickListe
                     Content rowItem = new Content();
                     rowItem.setUsername(studentResponselist.get(i).getUsername());
                     rowItem.setFullname("Codechef User");
+                    rowItem.setRoom_id(studentResponselist.get(i).getRoomId());
 
                     pendingStudentRequests.add(rowItem);
                 }
@@ -125,13 +126,13 @@ public class PendingStudentRequests extends Fragment implements OnItemClickListe
     @Override
     public void onItemClick(View view, int position) {
         if (view.getId() == R.id.acceptBtn) {
-            callPutApiAcceptReject(pendingStudentRequests.get(position).getUsername(), Constants.APPROVED_STATUS);
+            callPutApiAcceptReject(pendingStudentRequests.get(position).getUsername(), Constants.APPROVED_STATUS , pendingStudentRequests.get(position).getRoom_id());
         } else if (view.getId() == R.id.rejectBtn) {
-            callPutApiAcceptReject(pendingStudentRequests.get(position).getUsername(), Constants.REJECTED_STATUS);
+            callPutApiAcceptReject(pendingStudentRequests.get(position).getUsername(), Constants.REJECTED_STATUS , pendingStudentRequests.get(position).getRoom_id());
         }
     }
 
-    private void callPutApiAcceptReject(final String username, final String status) {
+    private void callPutApiAcceptReject(final String username, final String status , String roomId) {
         Retrofit retrofit = new RetrofitClient().getAlibabaCookiesApi(activity);
         IChef ichef = retrofit.create(IChef.class);
 

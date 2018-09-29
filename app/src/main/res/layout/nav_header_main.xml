@@ -12,8 +12,8 @@
     android:backgroundTint="#BCAAA4"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/nav_profile"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:contentDescription="@string/nav_header_desc"
@@ -23,9 +23,9 @@
         android:id="@+id/userName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
+        android:layout_below="@+id/nav_profile"
         android:layout_marginTop="10dp"
-        android:layout_alignBaseline="@+id/imageView"
+        android:layout_alignBaseline="@+id/nav_profile"
         android:layout_alignParentBottom="true"
         android:textAllCaps="true"
         android:textColor="@android:color/black"

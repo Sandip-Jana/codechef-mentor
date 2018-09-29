@@ -18,7 +18,17 @@ public class MentorStudentResponse {
     @SerializedName("relationship")
     @Expose
     private String relationship;
+    @SerializedName("room_id")
+    @Expose
+    private String roomId;
 
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
+    }
     public String getUsername() {
         return username;
     }

@@ -3,8 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.hackathon.codechefapp">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -42,6 +55,8 @@
         <activity android:name=".activities.Student.MyStudents" />
         <activity android:name=".activities.mentor.MyMentors" />
         <activity android:name=".activities.chat.ChatActivity" />
+        <activity android:name=".activities.nav.leaderboard.LeaderBoard" />
+        <activity android:name=".activities.chat.discussion.Discussion"></activity>
     </application>
 
 </manifest>

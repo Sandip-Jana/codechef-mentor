@@ -44,6 +44,16 @@ public class MyStudents extends AppCompatActivity {
         Intent intent = new Intent(MyStudents.this, CodechefUser.class);
         intent.putExtra(Constants.username, userName);
         intent.putExtra(Constants.RELATION, relationStatus);
+
+        startActivity(intent);
+    }
+
+    public void startActivityCodechefUser(String userName, String relationStatus , String roomId) {
+        Intent intent = new Intent(MyStudents.this, CodechefUser.class);
+        intent.putExtra(Constants.username, userName);
+        intent.putExtra(Constants.RELATION, relationStatus);
+        intent.putExtra(Constants.ROOM_ID , roomId);
+
         startActivity(intent);
     }
 

@@ -105,6 +105,7 @@ public class ApprovedStudents extends Fragment implements OnItemClickListener {
                     Content rowItem = new Content();
                     rowItem.setUsername(studentResponselist.get(i).getUsername());
                     rowItem.setFullname("Codechef User");
+                    rowItem.setRoom_id(studentResponselist.get(i).getRoomId());
 
                     approvedStudents.add(rowItem);
                 }
@@ -124,12 +125,12 @@ public class ApprovedStudents extends Fragment implements OnItemClickListener {
     @Override
     public void onItemClick(View view, int position) {
         if (approvedStudents != null && approvedStudents.size() > position) {
-            startActivityCodechefUser(approvedStudents.get(position).getUsername(), Constants.APPROVED_STATUS);
+            startActivityCodechefUser(approvedStudents.get(position).getUsername(), Constants.APPROVED_STATUS , approvedStudents.get(position).getRoom_id());
         }
     }
 
-    private void startActivityCodechefUser(String userName, String relationStatus) {
-        ((MyStudents) activity).startActivityCodechefUser(userName, relationStatus);
+    private void startActivityCodechefUser(String userName, String relationStatus , String roomId) {
+        ((MyStudents) activity).startActivityCodechefUser(userName, relationStatus , roomId);
     }
 
     public void updateFragmentAdapter() {

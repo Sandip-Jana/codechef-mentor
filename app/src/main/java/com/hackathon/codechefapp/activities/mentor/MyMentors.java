@@ -38,10 +38,12 @@ public class MyMentors extends AppCompatActivity {
         mentorTabLayout.setupWithViewPager(mentorPager);
     }
 
-    public void startActivityCodechefUser(String userName, String relationStatus) {
+    public void startActivityCodechefUser(String userName, String relationStatus , String roomId) {
         Intent intent = new Intent(MyMentors.this, CodechefUser.class);
         intent.putExtra(Constants.username, userName);
         intent.putExtra(Constants.RELATION, relationStatus);
+        intent.putExtra(Constants.ROOM_ID , roomId);
+
         startActivity(intent);
     }
 

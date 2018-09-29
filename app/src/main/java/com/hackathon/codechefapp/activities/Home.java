@@ -1,7 +1,19 @@
 package com.hackathon.codechefapp.activities;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,6 +26,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -21,7 +34,9 @@ import com.hackathon.codechefapp.R;
 import com.hackathon.codechefapp.activities.SearchUser.SearchActivity;
 import com.hackathon.codechefapp.activities.SearchUser.UserProfile;
 import com.hackathon.codechefapp.activities.Student.MyStudents;
+import com.hackathon.codechefapp.activities.chat.discussion.Discussion;
 import com.hackathon.codechefapp.activities.mentor.MyMentors;
+import com.hackathon.codechefapp.activities.nav.leaderboard.LeaderBoard;
 import com.hackathon.codechefapp.client.RetrofitClient;
 import com.hackathon.codechefapp.constants.PreferenceConstants;
 import com.hackathon.codechefapp.dao.chat.ChatAuthResponse;
@@ -29,13 +44,24 @@ import com.hackathon.codechefapp.model.chat.ChatAuthBody;
 import com.hackathon.codechefapp.model.profile.Profile;
 import com.hackathon.codechefapp.preferences.SharedPreferenceUtils;
 import com.hackathon.codechefapp.retrofitmapping.IChef;
+import com.hackathon.codechefapp.utils.DisplayDialog;
 import com.hackathon.codechefapp.utils.DisplayToast;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import static android.Manifest.permission.CAMERA;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -51,8 +77,20 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private CardView mentorCard;
     private CardView studentCard;
     private CardView searchCard;
+    private CardView discussionCard;
 
     private SharedPreferenceUtils prefs;
+
+    //ImageView for profile Pic
+    private ImageView navigationDrawerProfilePic;
+    private Bitmap profilePicBitmap;
+
+    private ArrayList<String> permissionsToRequest;
+    private ArrayList<String> permissionsRejected = new ArrayList<>();
+    private ArrayList<String> permissions = new ArrayList<>();
+
+    private static final int ALL_PERMISSIONS_RESULT = 100;
+    private static final int IMAGE_PICK_REQUEST_CODE = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +110,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         mentorCard = contentMain.findViewById(R.id.mentorCard);
         studentCard = contentMain.findViewById(R.id.studentCard);
         searchCard = contentMain.findViewById(R.id.searchCard);
+        discussionCard = contentMain.findViewById(R.id.discussionCard);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        userName = navigationView.getHeaderView(0).findViewById(R.id.userName);
+        navigationDrawerProfilePic = navigationView.getHeaderView(0).findViewById(R.id.nav_profile);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -79,6 +122,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
 
         addListeners();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            permissions.add(CAMERA);
+            permissionsToRequest = findUnAskedPermissions(permissions);
+            if (permissionsToRequest.size() > 0)
+                requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]), ALL_PERMISSIONS_RESULT);
+        }
 
         if (!prefs.contains(PreferenceConstants.USER_PROFILE)) {
             getUserProfile();
@@ -94,10 +144,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        View header = navigationView.getHeaderView(0);
-        userName = header.findViewById(R.id.userName);
+
+        navigationDrawerProfilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(startImagePickerIntent(), IMAGE_PICK_REQUEST_CODE);
+            }
+        });
 
         // TODO
         fab.setOnClickListener(new View.OnClickListener() {
@@ -127,6 +181,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             public void onClick(View view) {
                 // start search Activity
                 startSearchActivity();
+            }
+        });
+
+        discussionCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startDiscussionActivity();
             }
         });
 
@@ -179,8 +240,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             startUserProfileActivity();
         } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
-
+        } else if (id == R.id.nav_leaderboard) {
+            startLeaderBardActivity();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_logout) {
@@ -212,6 +273,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void startSearchActivity() {
         Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+        startActivity(intent);
+    }
+
+    private void startDiscussionActivity() {
+        Intent intent = new Intent(getApplicationContext() , Discussion.class);
+        startActivity(intent);
+    }
+
+    private void startLeaderBardActivity() {
+        Intent intent = new Intent(getApplicationContext() , LeaderBoard.class);
         startActivity(intent);
     }
 
@@ -308,6 +379,196 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         });
 
     }
+
+    //navigation drawer proile picture permissions
+
+    private ArrayList<String> findUnAskedPermissions(ArrayList<String> wanted) {
+        ArrayList<String> result = new ArrayList<String>();
+        for (String permissionsWanted : wanted) {
+            if (!hasPermission(permissionsWanted)) {
+                result.add(permissionsWanted);
+            }
+        }
+        return result;
+    }
+
+    private boolean hasPermission(String permission) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED);
+        }
+        return true;
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case ALL_PERMISSIONS_RESULT:
+                for (String perms : permissionsToRequest) {
+                    if (hasPermission(perms)) {
+                    } else {
+                        permissionsRejected.add(perms);
+                    }
+                }
+                if (permissionsRejected.size() > 0) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
+                            DisplayDialog.showMessageOKCancel("These permissions are mandatory for the application. Please allow access.",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                requestPermissions(permissionsRejected.toArray(new String[permissionsRejected.size()]), ALL_PERMISSIONS_RESULT);
+                                            }
+                                        }
+                                    }, this);
+                            return;
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
+    public Intent startImagePickerIntent() {
+        // Determine Uri of camera image to save.
+        Uri outputFileUri = getCaptureImageOutputUri();
+        List<Intent> allIntents = new ArrayList<>();
+        PackageManager packageManager = getPackageManager();
+        // collect all camera intents
+        Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
+        for (ResolveInfo res : listCam) {
+            Intent intent = new Intent(captureIntent);
+            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+            intent.setPackage(res.activityInfo.packageName);
+            if (outputFileUri != null) {
+                //intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            }
+            allIntents.add(intent);
+        }
+        // collect all gallery intents
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("image/*");
+        List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
+        for (ResolveInfo res : listGallery) {
+            Intent intent = new Intent(galleryIntent);
+            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+            intent.setPackage(res.activityInfo.packageName);
+            allIntents.add(intent);
+        }
+        Intent mainIntent = allIntents.get(allIntents.size() - 1);
+        for (Intent intent : allIntents) {
+            if (intent.getComponent().getClassName().equals("com.android.documentsui.DocumentsActivity")) {
+                mainIntent = intent;
+                break;
+            }
+        }
+        allIntents.remove(mainIntent);
+        // Create a chooser from the main intent
+        Intent chooserIntent = Intent.createChooser(mainIntent, "Select source");
+        // Add all other intents
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
+        return chooserIntent;
+    }
+
+    private File imageFile;
+
+    private Uri getCaptureImageOutputUri() {
+        Uri outputFileUri = null;
+        imageFile = getPublicAlbumStorageDir("profilePic.png");
+        if (imageFile != null) {
+            // Log.d("Image location" , imageFile.getAbsolutePath()+" "+imageFile.getPath());
+            outputFileUri = Uri.fromFile(imageFile);
+        }
+        return outputFileUri;
+    }
+
+    public File getPublicAlbumStorageDir(String albumName) {
+        // Get the directory for the user's public pictures directory.
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), albumName);
+        if (!file.mkdirs()) {
+            Log.e("ok", "Directory not created");
+            file.mkdirs();
+        }
+        return file;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == IMAGE_PICK_REQUEST_CODE) {
+            Bitmap bitmap;
+            if (resultCode == Activity.RESULT_OK) {
+                if (getPickImageResultUri(data) != null) {
+                    Uri profilePicUri = getPickImageResultUri(data);
+                    try {
+                        profilePicBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), profilePicUri);
+                        navigationDrawerProfilePic.setImageBitmap(profilePicBitmap);
+
+                        //uploadImageToServer();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    bitmap = (Bitmap) data.getExtras().get("data");
+                    profilePicBitmap = bitmap;
+                    navigationDrawerProfilePic.setImageBitmap(profilePicBitmap);
+
+                    //uploadImageToServer();
+                }
+            }
+        }
+    }
+
+    public Uri getPickImageResultUri(Intent data) {
+        boolean isCamera = true;
+        if (data != null) {
+            String action = data.getAction();
+            isCamera = action != null && action.equals(MediaStore.ACTION_IMAGE_CAPTURE);
+        }
+        return isCamera ? getCaptureImageOutputUri() : data.getData();
+    }
+
+    private void uploadImageToServer() {
+        Retrofit retrofit = new RetrofitClient().getAlibabaCookiesApi(this);
+        IChef iChef = retrofit.create(IChef.class);
+
+//        //create body
+//        File file = null;
+//        if(imageFile!=null)
+//            file = imageFile;
+
+        File new_file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "new_file.png");
+        try {
+            new_file.createNewFile();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Log.d("Create File", "File exists?" + new_file.exists());
+
+        RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), new_file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("upload", new_file.getName(), reqFile);
+        RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "upload_test");
+
+        Call<Object> uploadPic = iChef.uploadProfilePic(body, name);
+        uploadPic.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                Log.d("ok", "response success");
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                Log.d("ok", "response failure");
+            }
+        });
+    }
+
+
+    // ends
 
     @Override
     public void onResume() {
