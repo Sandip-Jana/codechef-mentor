@@ -14,7 +14,6 @@
         android:background="@color/view_color"/>
 
     <ImageView
-        android:id="@+id/studentImage"
         android:layout_width="match_parent"
         android:layout_height="232dp"
         android:paddingTop="1dp"

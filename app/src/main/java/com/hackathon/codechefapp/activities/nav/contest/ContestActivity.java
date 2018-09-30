@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MenuItem;
 
 import com.hackathon.codechefapp.R;
 import com.hackathon.codechefapp.activities.nav.contest.fragments.ProblemDescriptionFragment;
@@ -17,7 +19,8 @@ import com.hackathon.codechefapp.preferences.SharedPreferenceUtils;
 
 public class ContestActivity extends AppCompatActivity {
 
-    private static final int NUM_PAGES = 3;
+    private static final int NUM_PAGES = 6;
+    private static final String TAG = ContestActivity.class.getSimpleName();
     private ViewPager pager;
     private PagerAdapter pagerAdapter;
 
@@ -30,12 +33,32 @@ public class ContestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contest);
 
+        initToolbar();
+
         prefs = SharedPreferenceUtils.getInstance(getApplicationContext());
 
         pager = findViewById(R.id.contestPager);
         pagerAdapter = new PagerAdapter(getSupportFragmentManager());
         pager.setPageTransformer(true, new ZoomOutPageTransformer());
         pager.setAdapter(pagerAdapter);
+    }
+
+    private void initToolbar() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private class PagerAdapter extends FragmentPagerAdapter {
@@ -49,8 +72,14 @@ public class ContestActivity extends AppCompatActivity {
                 case 0:
                     return new ShowContests();
                 case 1:
-                    return new ShowProblemsFragment();
+                    return new ShowContests();
                 case 2:
+                    return new ShowProblemsFragment();
+                case 3:
+                    return new ShowProblemsFragment();
+                case 4:
+                    return new ProblemDescriptionFragment();
+                case 5:
                     return new ProblemDescriptionFragment();
             }
             return null;
@@ -64,13 +93,13 @@ public class ContestActivity extends AppCompatActivity {
 
     public void showProblemsFragment(String contestCode) {
         prefs.setValue(PreferenceConstants.CONTESTCODE, contestCode);
-        pager.setCurrentItem(1);
+        pager.setCurrentItem(2);
     }
 
     public void showProblemBody(String problemCode, String contestCode) {
         prefs.setValue(PreferenceConstants.PROBLEM_CODE, problemCode);
         prefs.setValue(PreferenceConstants.CONTESTCODE, contestCode);
-        pager.setCurrentItem(2);
+        pager.setCurrentItem(5);
     }
 
 }

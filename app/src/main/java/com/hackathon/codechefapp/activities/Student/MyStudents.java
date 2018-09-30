@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.hackathon.codechefapp.R;
 import com.hackathon.codechefapp.activities.SearchUser.CodechefUser;
@@ -28,16 +29,34 @@ public class MyStudents extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_students);
 
+        initToolbar();
+
         studentTabLayout = findViewById(R.id.studentTabs);
         studentPager = findViewById(R.id.studentPager);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         StudentTabPagerAdapter adapter = new StudentTabPagerAdapter(this, getSupportFragmentManager());
         studentPager.setAdapter(adapter);
 
         studentTabLayout.setupWithViewPager(studentPager);
 
+    }
+
+    private void initToolbar() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void startActivityCodechefUser(String userName, String relationStatus) {

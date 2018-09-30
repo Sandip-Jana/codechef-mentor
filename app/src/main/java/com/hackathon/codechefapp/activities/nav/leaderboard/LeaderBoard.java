@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -27,6 +29,7 @@ import com.hackathon.codechefapp.utils.DisplayToast;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,6 +43,10 @@ public class LeaderBoard extends AppCompatActivity implements OnItemClickListene
     private TextView rankFirstTxt;
     private TextView rankSecondTxt;
     private TextView rankThirdTxt;
+
+    private ImageView firstRankImg;
+    private ImageView secondRankImg;
+    private ImageView thirdRankImg;
 
     private RecyclerView leaderboardRecyclerView;
     private LeaderBoardAdapter leaderBoardAdapterAdapter;
@@ -57,11 +64,17 @@ public class LeaderBoard extends AppCompatActivity implements OnItemClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leader_board);
 
+        initToolbar();
+
         progressBar = findViewById(R.id.leaderboardProgressBar);
 
         rankFirstTxt = findViewById(R.id.rankFirstTxt);
         rankSecondTxt = findViewById(R.id.rankSecondTxt);
         rankThirdTxt = findViewById(R.id.rankThirdTxt);
+
+        firstRankImg = findViewById(R.id.firstRankImage);
+        secondRankImg = findViewById(R.id.secondRankImage);
+        thirdRankImg = findViewById(R.id.thirdRankImg);
 
         leaderboardRecyclerView = findViewById(R.id.leaderboardRecyclerView);
         leaderboardRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -73,6 +86,24 @@ public class LeaderBoard extends AppCompatActivity implements OnItemClickListene
             fetchUserRelationShips();
 
         fecthLeaderBoard();
+    }
+
+    private void initToolbar() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void fecthLeaderBoard() {
@@ -122,6 +153,7 @@ public class LeaderBoard extends AppCompatActivity implements OnItemClickListene
                 ranksExcludingTopThree.add(responseList.get(i));
             }
         }
+        addListeners();
 
         leaderBoardAdapterAdapter = new LeaderBoardAdapter(ranksExcludingTopThree);
         leaderBoardAdapterAdapter.setItemClickListener(this);
@@ -192,6 +224,68 @@ public class LeaderBoard extends AppCompatActivity implements OnItemClickListene
             }
         }
 
+    }
+
+    private void addListeners() {
+        if(!rankFirstTxt.getText().toString().isEmpty()) {
+            rankFirstTxt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    gotoToppersProfile( getUsername( rankFirstTxt.getText().toString() ) );
+                }
+            });
+
+            firstRankImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    gotoToppersProfile( getUsername( rankFirstTxt.getText().toString() ) );
+                }
+            });
+        }
+
+        if(!rankSecondTxt.getText().toString().isEmpty()) {
+            rankSecondTxt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    gotoToppersProfile( getUsername( rankSecondTxt.getText().toString() ) );
+                }
+            });
+
+            secondRankImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    gotoToppersProfile( getUsername( rankSecondTxt.getText().toString() ) );
+                }
+            });
+        }
+
+        if(!rankThirdTxt.getText().toString().isEmpty()) {
+            rankThirdTxt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    gotoToppersProfile( getUsername( rankThirdTxt.getText().toString() ) );
+                }
+            });
+
+            thirdRankImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    gotoToppersProfile( getUsername( rankThirdTxt.getText().toString() ) );
+                }
+            });
+        }
+    }
+
+    private String getUsername( String nameScore ) {
+        StringTokenizer stringTokenizer = new StringTokenizer(nameScore , " ");
+        return stringTokenizer.nextToken();
+    }
+
+    private void gotoToppersProfile(String username) {
+            if (hashRelations.containsKey(username))
+                startActivityCodechefUser(username, hashRelations.get(username), hashRoomId.get(username));
+            else
+                startActivityCodechefUser(username);
     }
 
 }

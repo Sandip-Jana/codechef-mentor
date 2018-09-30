@@ -1,5 +1,6 @@
 package com.hackathon.codechefapp.activities;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -23,7 +24,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,6 +35,7 @@ import com.hackathon.codechefapp.activities.SearchUser.SearchActivity;
 import com.hackathon.codechefapp.activities.SearchUser.UserProfile;
 import com.hackathon.codechefapp.activities.Student.MyStudents;
 import com.hackathon.codechefapp.activities.chat.ChatActivity;
+import com.hackathon.codechefapp.activities.devs.DeveloperActivity;
 import com.hackathon.codechefapp.activities.mentor.MyMentors;
 import com.hackathon.codechefapp.activities.nav.contest.ContestActivity;
 import com.hackathon.codechefapp.activities.nav.leaderboard.LeaderBoard;
@@ -42,6 +43,7 @@ import com.hackathon.codechefapp.client.RetrofitClient;
 import com.hackathon.codechefapp.constants.Constants;
 import com.hackathon.codechefapp.constants.PreferenceConstants;
 import com.hackathon.codechefapp.dao.chat.ChatAuthResponse;
+import com.hackathon.codechefapp.model.alibaba.logout.Logout;
 import com.hackathon.codechefapp.model.chat.ChatAuthBody;
 import com.hackathon.codechefapp.model.profile.Profile;
 import com.hackathon.codechefapp.preferences.SharedPreferenceUtils;
@@ -56,9 +58,6 @@ import java.util.List;
 
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import okhttp3.Headers;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -118,10 +117,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         userName = navigationView.getHeaderView(0).findViewById(R.id.userName);
         navigationDrawerProfilePic = navigationView.getHeaderView(0).findViewById(R.id.nav_profile);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         prefs = SharedPreferenceUtils.getInstance(getApplicationContext());
-
 
         addListeners();
 
@@ -228,28 +224,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -262,8 +236,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             startContestActivity();
         } else if (id == R.id.nav_leaderboard) {
             startLeaderBardActivity();
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.nav_developers) {
+            startDevActivity();
         } else if (id == R.id.nav_logout) {
             startLoginActivity();
         } else if (id == R.id.nav_share) {
@@ -275,10 +249,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         return true;
     }
 
+    @SuppressLint("WrongConstant")
     private void startLoginActivity() {
-        prefs.clear();
-        Intent intent = new Intent(this, Login.class);
-        startActivity(intent);
+        logoutFromBackend();
     }
 
     private void startMyMentorActivity() {
@@ -303,6 +276,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void startLeaderBardActivity() {
         Intent intent = new Intent(getApplicationContext(), LeaderBoard.class);
+        startActivity(intent);
+    }
+
+    private void startDevActivity() {
+        Intent intent = new Intent(getApplicationContext(), DeveloperActivity.class);
         startActivity(intent);
     }
 
@@ -393,6 +371,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     private void authenticateUser() {
+
 
         Retrofit retrofit = new RetrofitClient().getAlibabaCookiesApi(this);
         IChef chef = retrofit.create(IChef.class);
@@ -529,7 +508,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         File file = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), albumName);
         if (!file.mkdirs()) {
-            Log.e("ok", "Directory not created");
             file.mkdirs();
         }
         return file;
@@ -571,44 +549,31 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         return isCamera ? getCaptureImageOutputUri() : data.getData();
     }
 
-    private void uploadImageToServer() {
+    private void logoutFromBackend() {
         Retrofit retrofit = new RetrofitClient().getAlibabaCookiesApi(this);
-        IChef iChef = retrofit.create(IChef.class);
-
-//        //create body
-//        File file = null;
-//        if(imageFile!=null)
-//            file = imageFile;
-
-        File new_file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "new_file.png");
-        try {
-            new_file.createNewFile();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        Log.d("Create File", "File exists?" + new_file.exists());
-
-        RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), new_file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("upload", new_file.getName(), reqFile);
-        RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "upload_test");
-
-        Call<Object> uploadPic = iChef.uploadProfilePic(body, name);
-        uploadPic.enqueue(new Callback<Object>() {
+        final IChef ichef = retrofit.create(IChef.class);
+        Call<Logout> logoutCall = ichef.logout();
+        logoutCall.enqueue(new Callback<Logout>() {
+            @SuppressLint("WrongConstant")
             @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
-                Log.d("ok", "response success");
+            public void onResponse(Call<Logout> call, Response<Logout> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getStatus().equalsIgnoreCase(Constants.RESPONSE_SUCCESS)) {
+                    prefs.clear();
+                    Intent intent = new Intent(Home.this, Login.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), String.valueOf(R.string.error_message));
+                }
             }
 
             @Override
-            public void onFailure(Call<Object> call, Throwable t) {
-                Log.d("ok", "response failure");
+            public void onFailure(Call<Logout> call, Throwable t) {
+                DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), String.valueOf(R.string.error_message));
             }
         });
     }
-
-
-    // ends
 
     @Override
     public void onResume() {

@@ -8,9 +8,15 @@
     android:background="@color/colorBackground"
     tools:context=".activities.mentor.MyMentors">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/view_color"/>
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="232dp"
+        android:paddingTop="1dp"
         android:src="@drawable/my_student"/>
 
     <View

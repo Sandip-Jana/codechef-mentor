@@ -11,4 +11,8 @@
     <dimen name="font_size_medium">14dp</dimen>
     <dimen name="font_size_large">16dp</dimen>
 
+    <dimen name="font_size_cards">18dp</dimen>
+    <dimen name="card_corner_radius">6dp</dimen>
+    <dimen name="card_height">200dp</dimen>
+
 </resources>

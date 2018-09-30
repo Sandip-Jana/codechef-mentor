@@ -42,4 +42,6 @@ public final class URLConstants {
 
     public static final String PROBLEM_DESC = "/contests/{contestCode}/problems/{problemCode}";
 
+    public static final String LOGOUT = "/users/logout";
+
 }

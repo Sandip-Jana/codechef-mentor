@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import retrofit2.Retrofit;
 
 public class ShowProblemsFragment extends Fragment implements OnItemClickListener {
 
+    private static final String TAG = ShowProblemsFragment.class.getSimpleName();
     private TextView contestCodeTxt;
     private TextView contestName;
     private TextView noDataTxt;
@@ -53,7 +55,6 @@ public class ShowProblemsFragment extends Fragment implements OnItemClickListene
 
     private SharedPreferenceUtils prefs;
 
-    private boolean isVisible = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,7 +80,7 @@ public class ShowProblemsFragment extends Fragment implements OnItemClickListene
 
         contestCode = prefs.getStringValue(PreferenceConstants.CONTESTCODE, "");
 
-        isVisible = true;
+        fetchContestDetailsApi();
     }
 
     private void fetchContestDetailsApi() {
@@ -141,19 +142,11 @@ public class ShowProblemsFragment extends Fragment implements OnItemClickListene
 
     @Override
     public void onItemClick(View view, int position) {
+        Log.d("work" , position + "  showProblemsFra "+ problemsList.get(position).getProblemCode() );
         if (problemsList != null && problemsList.size() > position) {
             ((ContestActivity) activity).showProblemBody(problemsList.get(position).getProblemCode() , problemsList.get(position).getContestCode());
         }
     }
-
-
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        if(isVisible) {
-            fetchContestDetailsApi();
-        }
-        super.setUserVisibleHint(isVisibleToUser);
-    }
-
 
     @Override
     public void onAttach(Context context) {

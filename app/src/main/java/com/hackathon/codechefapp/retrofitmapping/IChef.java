@@ -5,6 +5,7 @@ import com.hackathon.codechefapp.dao.RefreshTokenBody;
 import com.hackathon.codechefapp.dao.chat.ChatAuthResponse;
 import com.hackathon.codechefapp.model.alibaba.friendRequest.SendRequestBody;
 import com.hackathon.codechefapp.model.alibaba.friendRequest.SendRequestResponse;
+import com.hackathon.codechefapp.model.alibaba.logout.Logout;
 import com.hackathon.codechefapp.model.alibaba.mentor_student.MentorOrStudent;
 import com.hackathon.codechefapp.model.alibaba.mentor_student.StudentAcceptRejectBody;
 import com.hackathon.codechefapp.model.alibaba.myRelationshipApi.UserRelations;
@@ -44,6 +45,7 @@ import static com.hackathon.codechefapp.constants.URLConstants.GET_PREVIOUS_MESS
 import static com.hackathon.codechefapp.constants.URLConstants.GET_STUDENTS;
 import static com.hackathon.codechefapp.constants.URLConstants.GET_USER_RELATIONS;
 import static com.hackathon.codechefapp.constants.URLConstants.LEADERBOARD;
+import static com.hackathon.codechefapp.constants.URLConstants.LOGOUT;
 import static com.hackathon.codechefapp.constants.URLConstants.OATH;
 import static com.hackathon.codechefapp.constants.URLConstants.PROBLEMS;
 import static com.hackathon.codechefapp.constants.URLConstants.PROBLEM_DESC;
@@ -126,5 +128,9 @@ public interface IChef {
     @Headers("Content-Type: application/json")
     @GET(PROBLEM_DESC)
     Call<ProblemDescription> getProblemDesc(@Header("Authorization") String authToken , @Path("contestCode") String contestCode , @Path("problemCode") String problemCode);
+
+    @Headers("Content-Type: application/json")
+    @GET(LOGOUT)
+    Call<Logout> logout();
 
 }

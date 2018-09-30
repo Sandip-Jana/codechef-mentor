@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import retrofit2.Retrofit;
 
 public class ShowContests extends Fragment implements OnItemClickListener {
 
+    private static final String TAG = ShowContests.class.getSimpleName();
     private ProgressBar progressBar;
     private Activity activity;
     private RecyclerView contestsRecyclerView;
@@ -108,6 +110,7 @@ public class ShowContests extends Fragment implements OnItemClickListener {
 
     @Override
     public void onItemClick(View view, int position) {
+        Log.d("work" , position + " " + contestList.get(position).getCode());
         if (contestList != null && contestList.size() > position) {
             ((ContestActivity) activity).showProblemsFragment(contestList.get(position).getCode());
         }

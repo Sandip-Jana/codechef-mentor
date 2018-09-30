@@ -1,11 +1,14 @@
 package com.hackathon.codechefapp.activities.chat;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -68,6 +71,8 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        initToolbar();
+
         editTextChat = findViewById(R.id.editTextChatbox);
         sendButton = findViewById(R.id.sendBtn);
         chatProgressBar = findViewById(R.id.chatProgressBar);
@@ -79,8 +84,6 @@ public class ChatActivity extends AppCompatActivity {
             Log.d(TAG, "RoomId not fetched");
             return;
         }
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView);
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -95,11 +98,29 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    private void initToolbar() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void startChatting() {
 
         URI uri = null;
         try {
-            uri = new URI("http://149.129.138.172/cable");
+            uri = new URI("http://149.129.138.172/cable?auth_code="+prefs.getStringValue(PreferenceConstants.AUTH_CODE , ""));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -134,7 +155,7 @@ public class ChatActivity extends AppCompatActivity {
         }).onRejected(new Subscription.RejectedCallback() {
             @Override
             public void call() {
-
+                Log.d(TAG, "Subscription Rejected");
             }
         }).onReceived(new Subscription.ReceivedCallback() {
             @Override
@@ -165,9 +186,11 @@ public class ChatActivity extends AppCompatActivity {
                     subscription.perform("send_message", params);
 
                 } else if (!isConnected) {
-                    onBackPressed();
-                    DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), "Connection problem");
+                    hideKeyboard( ChatActivity.this );
+                    DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), "An unauthorized connection attempt was rejected");
+
                 } else {
+                    hideKeyboard( ChatActivity.this );
                     DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), "Message cant be empty");
                 }
             }
@@ -220,7 +243,6 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
         super.onBackPressed();
     }
 
@@ -283,6 +305,15 @@ public class ChatActivity extends AppCompatActivity {
         chatRecyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
 
         startChatting();
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            view = new View(activity);
+        }
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }

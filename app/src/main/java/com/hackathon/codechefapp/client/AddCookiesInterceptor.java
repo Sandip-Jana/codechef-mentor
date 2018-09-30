@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.hackathon.codechefapp.preferences.SharedPreferenceUtils;
 
-
 import java.io.IOException;
 import java.util.HashSet;
 
@@ -30,7 +29,8 @@ public class AddCookiesInterceptor implements Interceptor {
         HashSet<String> preferences = SharedPreferenceUtils.getInstance(context).getCookies();
         for (String cookie : preferences) {
             builder.addHeader("Cookie", cookie);
-            Log.v("OkHttp", "Adding Header: " + cookie); // This is done so I know which headers are being added; this interceptor is used after the normal logging of OkHttp
+            // This is done so I know which headers are being added; this interceptor is used after the normal logging of OkHttp
+            Log.v("OkHttp", "Adding Header: " + cookie);
         }
         return chain.proceed(builder.build());
     }

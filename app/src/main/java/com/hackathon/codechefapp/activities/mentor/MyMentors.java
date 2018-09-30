@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.hackathon.codechefapp.R;
 import com.hackathon.codechefapp.activities.SearchUser.CodechefUser;
@@ -27,15 +28,33 @@ public class MyMentors extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_mentors);
 
+        initToolbar();
+
         mentorTabLayout = findViewById(R.id.mentorsTabLayout);
         mentorPager = findViewById(R.id.mentorPager);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         MentorTabPagerAdapter adapter = new MentorTabPagerAdapter(this, getSupportFragmentManager());
         mentorPager.setAdapter(adapter);
 
         mentorTabLayout.setupWithViewPager(mentorPager);
+    }
+
+    private void initToolbar() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void startActivityCodechefUser(String userName, String relationStatus , String roomId) {

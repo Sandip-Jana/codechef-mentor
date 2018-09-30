@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.devs.DeveloperActivity">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/dev_team"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:src="@drawable/dev_icon" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="@dimen/font_size_medium"
+        android:textStyle="normal|bold"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorPrimary"
+        android:text="Team Name : We Love You"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="@dimen/font_size_medium"
+        android:textStyle="normal|bold"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorPrimary"
+        android:text="Team Members"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="@dimen/font_size_medium"
+        android:textStyle="normal|bold"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorPrimary"
+        android:text="Chinmay Rakshit \n Handle : deathcoder007 (Right) "/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="@dimen/font_size_medium"
+        android:textStyle="normal|bold"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorPrimary"
+        android:text="Sandip Jana \n Handle : sandip_jana  (Left)"/>
+
+</LinearLayout>

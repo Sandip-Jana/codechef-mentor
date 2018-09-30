@@ -5,25 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="2dp"
-    card_view:cardCornerRadius="4dp">
+    card_view:cardCornerRadius="5dp">
 
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="5"
         android:layout_marginBottom="2dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="2dp">
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
             android:layout_marginTop="6dp"
-            android:layout_weight="3"
+            android:layout_weight="2.5"
             android:orientation="vertical">
 
             <TextView
@@ -32,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/fullname"
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="@dimen/font_size_large"
                 android:textStyle="bold" />
 
             <TextView
@@ -42,7 +41,7 @@
                 android:layout_marginTop="6dp"
                 android:text="@string/username"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="14sp"
+                android:textSize="@dimen/font_size_medium"
                 android:textStyle="normal" />
 
 
@@ -50,8 +49,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginTop="6dp"
-                android:paddingLeft="20dp"
-                android:background="@color/view_color"/>
+                android:background="@color/view_color"
+                android:paddingLeft="20dp" />
 
         </LinearLayout>
 
@@ -60,18 +59,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_weight="1"
+            android:layout_weight="0.4"
             android:background="@drawable/rounded_btn_primary"
-            android:text="Accept" />
+            android:text="Accept"
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/rejectBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_weight="1"
+            android:layout_weight="0.4"
             android:background="@drawable/rounded_btn_primary"
-            android:text="Reject" />
+            android:text="Reject"
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 

@@ -7,6 +7,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -63,13 +64,13 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        initToolbar();
+
         searchLayout = findViewById(R.id.searchLayout);
         searchTxt = findViewById(R.id.searchTxt);
         searchBtn = findViewById(R.id.searchBtn);
         progressBarSearch = findViewById(R.id.progressBarSearch);
         searchRecyclerView = findViewById(R.id.searchRecyclerView);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         searchRecyclerView.setHasFixedSize(false);
 
@@ -84,6 +85,24 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
             DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), "Could not fetch your relations");
 
         addListeners();
+    }
+
+    private void initToolbar() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void addListeners() {

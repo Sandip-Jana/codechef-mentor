@@ -9,6 +9,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -70,9 +71,9 @@ public class UserProfile extends AppCompatActivity implements OnChartValueSelect
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userprofile);
 
-        prefs = SharedPreferenceUtils.getInstance(getApplicationContext());
+        initToolbar();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        prefs = SharedPreferenceUtils.getInstance(getApplicationContext());
 
         username = findViewById(R.id.username);
 
@@ -102,6 +103,24 @@ public class UserProfile extends AppCompatActivity implements OnChartValueSelect
             Profile profile = new Gson().fromJson(userProfle, Profile.class);
             renderProfileDetailsToUI(profile);
         }
+    }
+
+    private void initToolbar() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void renderProfileDetailsToUI(Profile profile) {
@@ -184,13 +203,15 @@ public class UserProfile extends AppCompatActivity implements OnChartValueSelect
 
         pieChart.setOnChartValueSelectedListener(this);
 
+
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
 
         for (int i = 0; i < submissionsList.size(); i++) {
-            entries.add(new PieEntry((float) submissionsList.get(i).getData(), submissionsList.get(i).getLabel(), getResources().getDrawable(R.drawable.star)));
+            if(submissionsList.get(i).getData()>0)
+                entries.add(new PieEntry((int) submissionsList.get(i).getData(), submissionsList.get(i).getLabel(), getResources().getDrawable(R.drawable.star)));
         }
 
-        PieDataSet dataSet = new PieDataSet(entries, "User submissions");
+        PieDataSet dataSet = new PieDataSet(entries, "");
 
         dataSet.setDrawIcons(false);
 
@@ -220,12 +241,13 @@ public class UserProfile extends AppCompatActivity implements OnChartValueSelect
         dataSet.setColors(colors);
 
         PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter());
+        //data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.WHITE);
         data.setValueTypeface(Typeface.DEFAULT_BOLD);
         pieChart.setData(data);
 
+        pieChart.setDrawEntryLabels(false);
         // undo all highlights
         pieChart.highlightValues(null);
 
@@ -238,22 +260,22 @@ public class UserProfile extends AppCompatActivity implements OnChartValueSelect
 
         Legend l = pieChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
-        l.setXEntrySpace(7f);
+        l.setXEntrySpace(5f);
         l.setYEntrySpace(0f);
         l.setYOffset(0f);
 
+
         pieChart.setEntryLabelColor(Color.WHITE);
         pieChart.setEntryLabelTypeface(Typeface.DEFAULT_BOLD);
-        pieChart.setEntryLabelTextSize(12f);
-
+        pieChart.setEntryLabelTextSize(11f);
 
         // entry label styling
         pieChart.setEntryLabelColor(Color.WHITE);
         pieChart.setEntryLabelTypeface(Typeface.DEFAULT_BOLD);
-        pieChart.setEntryLabelTextSize(12f);
+        pieChart.setEntryLabelTextSize(11f);
     }
 
     private SpannableString generateCenterSpannableText() {

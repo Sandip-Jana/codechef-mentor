@@ -8,12 +8,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -95,12 +98,12 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_codechef_user);
 
+        initToolbar();
+
         pager = findViewById(R.id.btnPager);
         progressBarSearch = findViewById(R.id.progressBarUser);
 
         prefs = SharedPreferenceUtils.getInstance(getApplicationContext());
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         user = findViewById(R.id.userLayout);
 
@@ -340,7 +343,8 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
 
         for (int i = 0; i < submissionsList.size(); i++) {
-            entries.add(new PieEntry((float) submissionsList.get(i).getData(), submissionsList.get(i).getLabel(), getResources().getDrawable(R.drawable.star)));
+            if(submissionsList.get(i).getData()>0)
+            entries.add(new PieEntry((int) submissionsList.get(i).getData(), submissionsList.get(i).getLabel(), getResources().getDrawable(R.drawable.star)));
         }
 
         PieDataSet dataSet = new PieDataSet(entries, "");
@@ -373,12 +377,13 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
         dataSet.setColors(colors);
 
         PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter());
+        //data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.WHITE);
         data.setValueTypeface(Typeface.DEFAULT_BOLD);
         pieChart.setData(data);
 
+        pieChart.setDrawEntryLabels(false);
         // undo all highlights
         pieChart.highlightValues(null);
 
@@ -391,21 +396,22 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
 
         Legend l = pieChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
-        l.setXEntrySpace(7f);
+        l.setXEntrySpace(5f);
         l.setYEntrySpace(0f);
         l.setYOffset(0f);
 
+
         pieChart.setEntryLabelColor(Color.WHITE);
         pieChart.setEntryLabelTypeface(Typeface.DEFAULT_BOLD);
-        pieChart.setEntryLabelTextSize(12f);
+        pieChart.setEntryLabelTextSize(11f);
 
         // entry label styling
         pieChart.setEntryLabelColor(Color.WHITE);
         pieChart.setEntryLabelTypeface(Typeface.DEFAULT_BOLD);
-        pieChart.setEntryLabelTextSize(12f);
+        pieChart.setEntryLabelTextSize(11f);
     }
 
     private SpannableString generateCenterSpannableText() {
@@ -427,5 +433,24 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
         intent.putExtra(Constants.ROOM_ID , this.roomId);
         startActivity(intent);
     }
+
+    private void initToolbar() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }
