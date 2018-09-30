@@ -36,4 +36,10 @@ public final class URLConstants {
 
     public static final String LEADERBOARD = "leaderboard";
 
+    public static final String CONTESTS = "contests";
+
+    public static final String PROBLEMS = "contests/{contestCode}";
+
+    public static final String PROBLEM_DESC = "/contests/{contestCode}/problems/{problemCode}";
+
 }

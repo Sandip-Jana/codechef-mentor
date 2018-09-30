@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/F:/android-studio-setup/plugins/android/lib/android.jar!/images/material_design_icons/editor/ic_format_list_numbered_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/F:/android-studio-setup/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_assignment_turned_in_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,9 +33,10 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_ranking" />
+                                      <entry key="imageAsset" value="F:\codechef\ic_contest.png" />
+                                      <entry key="outputName" value="ic_menu_contest" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="484244" />
+                                      <entry key="themeColor" value="241f20" />
                                     </map>
                                   </option>
                                 </PersistentState>

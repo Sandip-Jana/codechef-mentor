@@ -3,19 +3,22 @@
     <!-- Login Page -->
     <string name="app_name">Codechef Mentor</string>
     <string name="login">LOGIN</string>
-
     <string name="client_id">dd0b7e65f63265923d3686cdbbabf163</string>
     <string name="client_secret">1b13041d6b891cb3369b1218c15987c3</string>
+    <string name="redirect_to_backend">http://149.129.138.172/users/auth/codechef</string>
     <string name="redirect_uri">mentor://callback</string>
     <string name="response_type">code</string>
-
-    <string name="no_internet">Interent Connection not found</string>
-    <string name="content_type">application/json</string>
-    <string name="authorization_code">authorization_code</string>
-    <string name="error_message">Oops Some Error Occured</string>
+    <string name="refresh_token">refresh_token</string>
     <string name="login_in_successfull">Successfully Logged In</string>
     <string name="unsuccessfull_login">Couldn\'t Log in. Please Try Again</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="content_type">application/json</string>
+    <string name="authorization_code">authorization_code</string>
+
+    <!--Added to show error messages-->
+    <string name="no_internet">Interent Connection not found</string>
+    <string name="error_message">Oops Some Error Occured</string>
+
+    <!--Added for Home Activity-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -32,8 +35,7 @@
     <string name="username">username</string>
     <string name="no_user_found">No user found for this search</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--Added for mentor and student cards-->
     <string name="send_mentor_request">Send Mentor Request</string>
     <string name="mentor_request_sent">Mentor Request Sent</string>
     <string name="no_data">no_data</string>
@@ -44,9 +46,23 @@
     <string name="pending_requests">Pending Requests</string>
     <string name="my_approved_mentors">My Mentors</string>
     <string name="app_title">Codechef Mentor</string>
-    <string name="refresh_token">refresh_token</string>
-    <string name="discussions">Discuss</string>
 
-    <!-- Next -->
+
+    <!--Added for FAB button-->
+    <string name="general">General Discussion</string>
+    <string name="acm">ACM</string>
+    <string name="ioi">IOI</string>
+    <string name="placements_discuss">Placements</string>
+
+    <!--Added for contest fragments-->
+    <string name="no_contest_data">No Data to show. Please try again or check contest timings.</string>
+
+    <!--Added navigation strings-->
+    <string name="profile">Profile</string>
+    <string name="contests">Contests</string>
+    <string name="leaderboard">LeaderBoard</string>
+    <string name="tools">Tools</string>
+    <string name="logout">Logout</string>
+    <string name="share">Share</string>
 
 </resources>

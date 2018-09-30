@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
+    android:layout_marginRight="2dp"
+    android:layout_marginLeft="2dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/contestCode"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_size_large"
+            android:textStyle="normal|bold"
+            android:text="USC2018"/>
+
+        <TextView
+            android:id="@+id/contestName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_size_large"
+            android:gravity="center"
+            android:textStyle="normal|bold"
+            android:text="UEM Code Storm"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/startDate"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_size_medium"
+            android:textStyle="normal|bold"
+            android:text="2018-11-17 20:00:00"/>
+
+        <TextView
+            android:id="@+id/endDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_size_medium"
+            android:gravity="center"
+            android:textStyle="normal|bold"
+            android:text="2018-11-17 23:00:00"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="2dp"
+        android:paddingLeft="8dp"
+        android:background="@color/view_color"/>
+
+
+</LinearLayout>

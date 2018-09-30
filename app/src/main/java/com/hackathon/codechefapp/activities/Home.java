@@ -14,7 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -34,10 +34,12 @@ import com.hackathon.codechefapp.R;
 import com.hackathon.codechefapp.activities.SearchUser.SearchActivity;
 import com.hackathon.codechefapp.activities.SearchUser.UserProfile;
 import com.hackathon.codechefapp.activities.Student.MyStudents;
-import com.hackathon.codechefapp.activities.chat.discussion.Discussion;
+import com.hackathon.codechefapp.activities.chat.ChatActivity;
 import com.hackathon.codechefapp.activities.mentor.MyMentors;
+import com.hackathon.codechefapp.activities.nav.contest.ContestActivity;
 import com.hackathon.codechefapp.activities.nav.leaderboard.LeaderBoard;
 import com.hackathon.codechefapp.client.RetrofitClient;
+import com.hackathon.codechefapp.constants.Constants;
 import com.hackathon.codechefapp.constants.PreferenceConstants;
 import com.hackathon.codechefapp.dao.chat.ChatAuthResponse;
 import com.hackathon.codechefapp.model.chat.ChatAuthBody;
@@ -52,6 +54,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.yavski.fabspeeddial.FabSpeedDial;
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -67,17 +70,17 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private static final String TAG = Home.class.getSimpleName().toString();
     private DrawerLayout drawer;
-    private FloatingActionButton fab;
     private Toolbar toolbar;
     private NavigationView navigationView;
     private TextView userName;
 
     private View contentMain;
 
+    private FabSpeedDial fab;
+
     private CardView mentorCard;
     private CardView studentCard;
     private CardView searchCard;
-    private CardView discussionCard;
 
     private SharedPreferenceUtils prefs;
 
@@ -101,7 +104,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), getString(R.string.login_in_successfull));
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FabSpeedDial) findViewById(R.id.fabSpeedDial);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -110,7 +113,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         mentorCard = contentMain.findViewById(R.id.mentorCard);
         studentCard = contentMain.findViewById(R.id.studentCard);
         searchCard = contentMain.findViewById(R.id.searchCard);
-        discussionCard = contentMain.findViewById(R.id.discussionCard);
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         userName = navigationView.getHeaderView(0).findViewById(R.id.userName);
@@ -153,14 +155,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             }
         });
 
-        // TODO
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), "Please Write to Us");
-            }
-        });
-
         mentorCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -184,10 +178,36 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             }
         });
 
-        discussionCard.setOnClickListener(new View.OnClickListener() {
+        fab.setMenuListener(new FabSpeedDial.MenuListener() {
             @Override
-            public void onClick(View view) {
-                startDiscussionActivity();
+            public boolean onPrepareMenu(NavigationMenu navigationMenu) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.action_general:
+                        startChatActivity(Constants.GENERAL_CHAT_ROOM);
+                        break;
+                    case R.id.action_acm:
+                        startChatActivity(Constants.ACM_CHAT_ROOM);
+                        break;
+                    case R.id.action_ioi:
+                        startChatActivity(Constants.IOI_CHAT_ROOM);
+                        break;
+                    case R.id.action_placements:
+                        startChatActivity(Constants.PLACEMENT_CHAT_ROOM);
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+
+            @Override
+            public void onMenuClosed() {
+
             }
         });
 
@@ -238,8 +258,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         if (id == R.id.nav_profile) {
             startUserProfileActivity();
-        } else if (id == R.id.nav_gallery) {
-
+        } else if (id == R.id.nav_contests) {
+            startContestActivity();
         } else if (id == R.id.nav_leaderboard) {
             startLeaderBardActivity();
         } else if (id == R.id.nav_manage) {
@@ -247,7 +267,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         } else if (id == R.id.nav_logout) {
             startLoginActivity();
         } else if (id == R.id.nav_share) {
-
+            startWhatsAppIntent();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -276,14 +296,34 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         startActivity(intent);
     }
 
-    private void startDiscussionActivity() {
-        Intent intent = new Intent(getApplicationContext() , Discussion.class);
+    private void startContestActivity() {
+        Intent intent = new Intent(getApplicationContext(), ContestActivity.class);
         startActivity(intent);
     }
 
     private void startLeaderBardActivity() {
-        Intent intent = new Intent(getApplicationContext() , LeaderBoard.class);
+        Intent intent = new Intent(getApplicationContext(), LeaderBoard.class);
         startActivity(intent);
+    }
+
+    private void startChatActivity(String roomId) {
+        Intent intent = new Intent(Home.this, ChatActivity.class);
+        intent.putExtra(Constants.ROOM_ID, roomId);
+        startActivity(intent);
+    }
+
+    private void startWhatsAppIntent() {
+        Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+        whatsappIntent.setType("text/plain");
+        whatsappIntent.setPackage("com.whatsapp");
+        whatsappIntent.putExtra(Intent.EXTRA_TEXT, "Please download the app Codechef Mentors from playstore.");
+        try {
+            startActivity(whatsappIntent);
+        } catch (android.content.ActivityNotFoundException ex) {
+            DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), "Whatsapp have not been installed.");
+        } catch (Exception e) {
+            DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), getString(R.string.error_message));
+        }
     }
 
     private void startUserProfileActivity() {

@@ -74,7 +74,7 @@ public class Login extends AppCompatActivity {
                         .appendQueryParameter("response_type", getString(R.string.response_type))
                         .appendQueryParameter("client_id", getString(R.string.client_id))
                         .appendQueryParameter("state", "xyz")
-                        .appendQueryParameter("redirect_uri", getString(R.string.redirect_uri));
+                        .appendQueryParameter("redirect_uri", getString(R.string.redirect_to_backend));
 
                 startLoginAuthentication(builder);
 
@@ -176,7 +176,7 @@ public class Login extends AppCompatActivity {
         accessTokenBody.setCode(authCode);
         accessTokenBody.setClient_id(getString(R.string.client_id));
         accessTokenBody.setClient_secret(getString(R.string.client_secret));
-        accessTokenBody.setRedirect_uri(getString(R.string.redirect_uri));
+        accessTokenBody.setRedirect_uri(getString(R.string.redirect_to_backend));
         return accessTokenBody;
     }
 

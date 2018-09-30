@@ -56,7 +56,7 @@
         <activity android:name=".activities.mentor.MyMentors" />
         <activity android:name=".activities.chat.ChatActivity" />
         <activity android:name=".activities.nav.leaderboard.LeaderBoard" />
-        <activity android:name=".activities.chat.discussion.Discussion"></activity>
+        <activity android:name=".activities.nav.contest.ContestActivity"></activity>
     </application>
 
 </manifest>

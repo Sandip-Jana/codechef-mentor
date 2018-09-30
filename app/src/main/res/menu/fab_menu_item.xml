@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_general"
+        android:icon="@android:drawable/ic_dialog_email"
+        android:title="@string/general" />
+    <item
+        android:id="@+id/action_acm"
+        android:icon="@android:drawable/ic_dialog_email"
+        android:title="@string/acm" />
+    <item
+        android:id="@+id/action_ioi"
+        android:icon="@android:drawable/ic_dialog_email"
+        android:title="@string/ioi" />
+    <item
+        android:id="@+id/action_placements"
+        android:icon="@android:drawable/ic_dialog_email"
+        android:title="@string/placements_discuss" />
+</menu>

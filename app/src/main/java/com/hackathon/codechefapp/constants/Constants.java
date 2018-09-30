@@ -48,6 +48,6 @@ public final class Constants {
     public static final String GENERAL_CHAT_ROOM = "-1";
     public static final String IOI_CHAT_ROOM = "-2";
     public static final String ACM_CHAT_ROOM = "-3";
-    public static final String JOB_CHAT_ROOM = "-4";
+    public static final String PLACEMENT_CHAT_ROOM = "-4";
 
 }

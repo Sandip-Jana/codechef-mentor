@@ -10,6 +10,9 @@ import com.hackathon.codechefapp.model.alibaba.mentor_student.StudentAcceptRejec
 import com.hackathon.codechefapp.model.alibaba.myRelationshipApi.UserRelations;
 import com.hackathon.codechefapp.model.chat.ChatAuthBody;
 import com.hackathon.codechefapp.model.chat.RetrieveMessagesResponse;
+import com.hackathon.codechefapp.model.contests.ShowContests.ContestResponse;
+import com.hackathon.codechefapp.model.contests.ShowProblems.ProblemsResponse;
+import com.hackathon.codechefapp.model.contests.problemDesc.ProblemDescription;
 import com.hackathon.codechefapp.model.leaderboard.LeaderBoardResponse;
 import com.hackathon.codechefapp.model.login.AccessToken;
 import com.hackathon.codechefapp.model.profile.Profile;
@@ -34,6 +37,7 @@ import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 import static com.hackathon.codechefapp.constants.URLConstants.CHAT_AUTHENTICATE;
+import static com.hackathon.codechefapp.constants.URLConstants.CONTESTS;
 import static com.hackathon.codechefapp.constants.URLConstants.GET_CODECHEF_PROFILE;
 import static com.hackathon.codechefapp.constants.URLConstants.GET_MENTORS;
 import static com.hackathon.codechefapp.constants.URLConstants.GET_PREVIOUS_MESSAGES;
@@ -41,6 +45,8 @@ import static com.hackathon.codechefapp.constants.URLConstants.GET_STUDENTS;
 import static com.hackathon.codechefapp.constants.URLConstants.GET_USER_RELATIONS;
 import static com.hackathon.codechefapp.constants.URLConstants.LEADERBOARD;
 import static com.hackathon.codechefapp.constants.URLConstants.OATH;
+import static com.hackathon.codechefapp.constants.URLConstants.PROBLEMS;
+import static com.hackathon.codechefapp.constants.URLConstants.PROBLEM_DESC;
 import static com.hackathon.codechefapp.constants.URLConstants.PROFILE;
 import static com.hackathon.codechefapp.constants.URLConstants.REQUEST_PUT_API;
 import static com.hackathon.codechefapp.constants.URLConstants.SEARCH_BY_USERNAME;
@@ -108,4 +114,17 @@ public interface IChef {
     @Headers("Content-Type: application/json")
     @GET(LEADERBOARD)
     Call<List<LeaderBoardResponse>> getLeaderBoard(@Query("num") String usersCount);
+
+    @Headers("Content-Type: application/json")
+    @GET(CONTESTS)
+    Call<ContestResponse> getContests(@Header("Authorization") String authToken);
+
+    @Headers("Content-Type: application/json")
+    @GET(PROBLEMS)
+    Call<ProblemsResponse> getProblems(@Header("Authorization") String authToken , @Path("contestCode") String contestCode);
+
+    @Headers("Content-Type: application/json")
+    @GET(PROBLEM_DESC)
+    Call<ProblemDescription> getProblemDesc(@Header("Authorization") String authToken , @Path("contestCode") String contestCode , @Path("problemCode") String problemCode);
+
 }
