@@ -60,7 +60,7 @@
     <!--Added navigation strings-->
     <string name="profile">Profile</string>
     <string name="contests">Contests</string>
-    <string name="leaderboard">LeaderBoard</string>
+    <string name="leaderboard">Top Mentors</string>
     <string name="dev">Developers</string>
     <string name="logout">Logout</string>
     <string name="share">Share</string>
