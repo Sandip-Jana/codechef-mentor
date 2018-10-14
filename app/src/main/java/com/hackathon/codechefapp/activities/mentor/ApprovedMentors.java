@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.hackathon.codechefapp.R;
 import com.hackathon.codechefapp.adapter.SearchAdapter;
@@ -41,6 +42,8 @@ public class ApprovedMentors extends Fragment implements OnItemClickListener {
     private RecyclerView.LayoutManager layoutManager;
     private SearchAdapter adapter;
 
+    private TextView noMentorTxt;
+
     private SharedPreferenceUtils prefs;
 
     @Override
@@ -54,6 +57,8 @@ public class ApprovedMentors extends Fragment implements OnItemClickListener {
         approvedMentorsRecyclerView = view.findViewById(R.id.approvedMentorsRecyclerView);
         approvedMentorsRecyclerView.setHasFixedSize(false);
         approvedMentorsRecyclerView.setLayoutManager(layoutManager);
+
+        noMentorTxt = (TextView) view.findViewById(R.id.noMentorTxt);
 
         activity = getActivity();
 
@@ -114,6 +119,8 @@ public class ApprovedMentors extends Fragment implements OnItemClickListener {
                 adapter = new SearchAdapter(approvedMentors);
                 adapter.setItemClickListener(this);
                 approvedMentorsRecyclerView.setAdapter(adapter);
+            } else {
+                noMentorTxt.setVisibility(View.VISIBLE);
             }
 
         } else {
@@ -124,12 +131,12 @@ public class ApprovedMentors extends Fragment implements OnItemClickListener {
     @Override
     public void onItemClick(View view, int position) {
         if (approvedMentors != null && approvedMentors.size() > position) {
-            startActivityCodechefUser(approvedMentors.get(position).getUsername(), Constants.APPROVED_STATUS + Constants.DELIMETER + Constants.MENTOR , approvedMentors.get(position).getRoom_id());
+            startActivityCodechefUser(approvedMentors.get(position).getUsername(), Constants.APPROVED_STATUS + Constants.DELIMETER + Constants.MENTOR, approvedMentors.get(position).getRoom_id());
         }
     }
 
-    private void startActivityCodechefUser(String userName, String relationStatus , String roomId) {
-        ((MyMentors) activity).startActivityCodechefUser(userName, relationStatus , roomId);
+    private void startActivityCodechefUser(String userName, String relationStatus, String roomId) {
+        ((MyMentors) activity).startActivityCodechefUser(userName, relationStatus, roomId);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.hackathon.codechefapp.adapter;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +31,7 @@ public class ProblemsFragmentAdapter extends RecyclerView.Adapter<ProblemsFragme
         final private TextView problemCode;
         final private TextView submissionsCnt;
         final private TextView accuracy;
-
+        final private CardView problemsCardView;
 
         public ViewHolder(View view) {
             super(view);
@@ -38,7 +39,9 @@ public class ProblemsFragmentAdapter extends RecyclerView.Adapter<ProblemsFragme
             problemCode = view.findViewById(R.id.problemCode);
             submissionsCnt = view.findViewById(R.id.submissionsCnt);
             accuracy = view.findViewById(R.id.accuracy);
+            problemsCardView = view.findViewById(R.id.problemsCardView);
 
+            problemsCardView.setOnClickListener(this);
             view.setOnClickListener(this);
         }
 
@@ -63,7 +66,7 @@ public class ProblemsFragmentAdapter extends RecyclerView.Adapter<ProblemsFragme
     public void onBindViewHolder(ProblemsFragmentAdapter.ViewHolder holder, int position) {
         ((ViewHolder) holder).problemCode.setText(data.get(position).getProblemCode());
         ((ViewHolder) holder).submissionsCnt.setText("Successfull Submissions: " + data.get(position).getSuccessfulSubmissions());
-        ((ViewHolder) holder).accuracy.setText("Accuracy: " + data.get(position).getAccuracy());
+        ((ViewHolder) holder).accuracy.setText("Accuracy: " + String.format("%.2f", data.get(position).getAccuracy()));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.hackathon.codechefapp.adapter;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,7 @@ public class ContestAdapter extends RecyclerView.Adapter<ContestAdapter.ViewHold
         final private TextView contestName;
         final private TextView startDate;
         final private TextView endDate;
-
+        final private CardView contestCard;
 
         public ViewHolder(View view) {
             super(view);
@@ -40,8 +41,10 @@ public class ContestAdapter extends RecyclerView.Adapter<ContestAdapter.ViewHold
             contestName = view.findViewById(R.id.contestName);
             startDate = view.findViewById(R.id.startDate);
             endDate = view.findViewById(R.id.endDate);
+            contestCard = view.findViewById(R.id.contestCardView);
 
             view.setOnClickListener(this);
+            contestCard.setOnClickListener(this);
         }
 
         @Override

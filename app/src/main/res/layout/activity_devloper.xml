@@ -11,6 +11,7 @@
         android:id="@+id/dev_team"
         android:layout_width="match_parent"
         android:layout_height="250dp"
+        android:layout_marginTop="5dp"
         android:src="@drawable/dev_icon" />
 
     <TextView

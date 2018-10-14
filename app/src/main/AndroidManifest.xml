@@ -27,7 +27,9 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:replace="android:supportsRtl">
-        <activity android:name=".activities.Login">
+        <activity
+            android:name=".activities.Login"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,16 +50,52 @@
             android:name=".activities.Home"
             android:hardwareAccelerated="true"
             android:label="@string/app_title"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.SearchUser.SearchActivity" />
-        <activity android:name=".activities.SearchUser.UserProfile" />
-        <activity android:name=".activities.SearchUser.CodechefUser" />
-        <activity android:name=".activities.Student.MyStudents" />
-        <activity android:name=".activities.mentor.MyMentors" />
-        <activity android:name=".activities.chat.ChatActivity" />
-        <activity android:name=".activities.nav.leaderboard.LeaderBoard" />
-        <activity android:name=".activities.nav.contest.ContestActivity" />
-        <activity android:name=".activities.devs.DeveloperActivity"></activity>
+        <activity
+            android:name=".activities.SearchUser.SearchActivity"
+            android:label="@string/search_header"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.SearchUser.UserProfile"
+            android:label="@string/my_profile_header"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.SearchUser.CodechefUser"
+            android:label="@string/user_profile_header"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.Student.MyStudents"
+            android:label="@string/my_students_header"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.mentor.MyMentors"
+            android:label="@string/my_mentors_header"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.chat.ChatActivity"
+            android:label="@string/chat"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.nav.leaderboard.LeaderBoard"
+            android:label="@string/leaderboard_heading"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.nav.contest.ContestActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.devs.DeveloperActivity"
+            android:label="@string/dev_header"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

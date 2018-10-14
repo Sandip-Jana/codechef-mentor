@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.hackathon.codechefapp.R;
 import com.hackathon.codechefapp.adapter.MentorRequestAdapter;
@@ -46,6 +47,8 @@ public class PendingMentorRequests extends Fragment implements OnItemClickListen
 
     ArrayList<Content> pendingMentors;
 
+    private TextView noPendingMentorTxt;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_pending_mentor_requests, container, false);
@@ -57,6 +60,8 @@ public class PendingMentorRequests extends Fragment implements OnItemClickListen
         pendingMentortRequestsRecyclerView = view.findViewById(R.id.pendingMentorsRequestsRecyclerView);
         pendingMentortRequestsRecyclerView.setHasFixedSize(false);
         pendingMentortRequestsRecyclerView.setLayoutManager(layoutManager);
+
+        noPendingMentorTxt = (TextView) view.findViewById(R.id.noPendingMentorTxt);
 
         activity = getActivity();
         prefs = SharedPreferenceUtils.getInstance(activity.getApplicationContext());
@@ -116,6 +121,8 @@ public class PendingMentorRequests extends Fragment implements OnItemClickListen
                 pendingRequestsAdapter = new MentorRequestAdapter(pendingMentors);
                 pendingRequestsAdapter.setItemClickListener(this);
                 pendingMentortRequestsRecyclerView.setAdapter(pendingRequestsAdapter);
+            } else {
+                noPendingMentorTxt.setVisibility(View.VISIBLE);
             }
 
         } else {
@@ -127,12 +134,12 @@ public class PendingMentorRequests extends Fragment implements OnItemClickListen
     @Override
     public void onItemClick(View view, int position) {
         if (pendingMentors != null && pendingMentors.size() > position) {
-            startActivityCodechefUser(pendingMentors.get(position).getUsername(), Constants.PENDING_STATUS + Constants.DELIMETER + Constants.MENTOR , pendingMentors.get(position).getRoom_id());
+            startActivityCodechefUser(pendingMentors.get(position).getUsername(), Constants.PENDING_STATUS + Constants.DELIMETER + Constants.MENTOR, pendingMentors.get(position).getRoom_id());
         }
     }
 
     private void startActivityCodechefUser(String userName, String relationStatus, String roomId) {
-        ((MyMentors) activity).startActivityCodechefUser(userName, relationStatus , roomId);
+        ((MyMentors) activity).startActivityCodechefUser(userName, relationStatus, roomId);
     }
 
 

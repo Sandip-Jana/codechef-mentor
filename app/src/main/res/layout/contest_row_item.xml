@@ -2,60 +2,88 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="5dp"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
-    android:layout_marginTop="5dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="3dp">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/contestCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:adjustViewBounds="true"
+        card_view:cardCornerRadius="@dimen/card_corner_radius">
 
-        <TextView
-            android:id="@+id/contestCode"
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
-            android:text="USC2018"
-            android:textSize="@dimen/font_size_large"
-            android:textStyle="normal|bold" />
-
-        <TextView
-            android:id="@+id/contestName"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="UEM Code Storm"
-            android:textSize="@dimen/font_size_large"
-            android:textStyle="normal|bold" />
+            android:layout_marginBottom="7dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
+                <TextView
+                    android:id="@+id/contestCode"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:text="USC2018"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/font_size_large"
+                    android:textStyle="normal|bold" />
 
-        <TextView
-            android:id="@+id/startDate"
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
-            android:text="2018-11-17 20:00:00"
-            android:textSize="@dimen/font_size_medium"
-            android:textStyle="normal|bold" />
+                <TextView
+                    android:id="@+id/contestName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="UEM Code Storm"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/font_size_large"
+                    android:textStyle="normal|bold" />
 
-        <TextView
-            android:id="@+id/endDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="2018-11-17 23:00:00"
-            android:textSize="@dimen/font_size_medium"
-            android:textStyle="normal|bold" />
+            </LinearLayout>
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/startDate"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:text="2018-11-17 20:00:00"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/font_size_medium"
+                    android:textStyle="normal|bold" />
+
+                <TextView
+                    android:id="@+id/endDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="2018-11-17 23:00:00"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/font_size_medium"
+                    android:textStyle="normal|bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
     <View
         android:layout_width="wrap_content"
@@ -65,6 +93,5 @@
         android:background="@color/view_color"
         android:paddingLeft="15dp"
         android:paddingRight="15dp" />
-
 
 </LinearLayout>

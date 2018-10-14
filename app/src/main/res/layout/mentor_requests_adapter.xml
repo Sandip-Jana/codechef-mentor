@@ -5,18 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="2dp"
+    android:adjustViewBounds="true"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     card_view:cardCornerRadius="4dp">
-
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="4"
         android:layout_marginBottom="2dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="2dp">
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal"
+        android:weightSum="4">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,8 +52,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginTop="6dp"
-                android:paddingLeft="20dp"
-                android:background="@color/view_color"/>
+                android:background="@color/view_color"
+                android:paddingLeft="20dp" />
 
         </LinearLayout>
 
@@ -63,14 +65,14 @@
             android:layout_weight="1"
             android:text="Pending"
             android:textSize="16dp"
-            android:textStyle="normal|bold"/>
+            android:textStyle="normal|bold" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:src="@drawable/ic_watch_pending"/>
+            android:src="@drawable/ic_watch_pending" />
 
     </LinearLayout>
 

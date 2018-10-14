@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -55,7 +54,6 @@ public class Login extends AppCompatActivity {
                 prefs.getBoolanValue(PreferenceConstants.ACCESS_TOKEN_UPDATED, true)) {
             gotoMainActivity();
         }
-
         addListeners();
     }
 
@@ -129,7 +127,7 @@ public class Login extends AppCompatActivity {
                 int statusCode = response.code();
                 if (response.isSuccessful()) {
 
-                    parseAccessTokenAndRefreshToken(response , authCode);
+                    parseAccessTokenAndRefreshToken(response, authCode);
 
                 } else {
                     DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), getString(R.string.error_message));
@@ -148,7 +146,7 @@ public class Login extends AppCompatActivity {
 
     }
 
-    private void parseAccessTokenAndRefreshToken(Response<AccessToken> response , String authCode) {
+    private void parseAccessTokenAndRefreshToken(Response<AccessToken> response, String authCode) {
         if (response == null || response.body() == null) {
             DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), getString(R.string.unsuccessfull_login));
             return;
@@ -162,7 +160,7 @@ public class Login extends AppCompatActivity {
             String scope = tokens.getResult().getData().getScope();
             String refresh_token = tokens.getResult().getData().getRefreshToken();
             Log.d(TAG, "AccessToken = " + access_token + "\n" + token_type + "\n" + scope + "\n refreshToken" + refresh_token + " \n" + expires_in);
-            gotoMainPage(access_token, refresh_token , authCode);
+            gotoMainPage(access_token, refresh_token, authCode);
         } else {
             DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), getString(R.string.unsuccessfull_login));
             return;
@@ -179,19 +177,19 @@ public class Login extends AppCompatActivity {
         return accessTokenBody;
     }
 
-    private void gotoMainPage(String accessToken, String refreshToken , String authCode) {
-        updatePreferences(accessToken, refreshToken , authCode);
+    private void gotoMainPage(String accessToken, String refreshToken, String authCode) {
+        updatePreferences(accessToken, refreshToken, authCode);
 
         gotoMainActivity();
     }
 
-    private void updatePreferences(String accessToken, String refreshToken , String authCode) {
+    private void updatePreferences(String accessToken, String refreshToken, String authCode) {
         if (prefs != null) {
             Log.d(TAG, "Updated Preferences");
 
             prefs.clear();
             ;
-            prefs.setValue(PreferenceConstants.AUTH_CODE , authCode);
+            prefs.setValue(PreferenceConstants.AUTH_CODE, authCode);
             prefs.setValue(PreferenceConstants.ACCESS_TOKEN_UPDATED, true);
             prefs.setValue(PreferenceConstants.ACCESS_TOKEN, accessToken);
             prefs.setValue(PreferenceConstants.REFRESH_TOKEN, refreshToken);

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hackathon.codechefapp.R;
@@ -27,6 +28,8 @@ public class StudentRequestAdapter extends RecyclerView.Adapter<StudentRequestAd
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        private LinearLayout userDetailsLayout;
         private TextView fullname;
         private TextView username;
         private Button acceptButton;
@@ -38,9 +41,11 @@ public class StudentRequestAdapter extends RecyclerView.Adapter<StudentRequestAd
             fullname = view.findViewById(R.id.fullname);
             acceptButton = view.findViewById(R.id.acceptBtn);
             rejectButton = view.findViewById(R.id.rejectBtn);
+            userDetailsLayout = view.findViewById(R.id.userDetailsLayout);
 
             acceptButton.setOnClickListener(this);
             rejectButton.setOnClickListener(this);
+            userDetailsLayout.setOnClickListener(this);
         }
 
         @Override
@@ -52,6 +57,11 @@ public class StudentRequestAdapter extends RecyclerView.Adapter<StudentRequestAd
                     }
                     break;
                 case R.id.rejectBtn:
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onItemClick(view, getAdapterPosition());
+                    }
+                    break;
+                case R.id.userDetailsLayout:
                     if (onItemClickListener != null) {
                         onItemClickListener.onItemClick(view, getAdapterPosition());
                     }

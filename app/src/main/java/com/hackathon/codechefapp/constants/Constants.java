@@ -22,7 +22,7 @@ public final class Constants {
     public static final String limit = "limit";
     public static final String LIMIT_VALUE = "20";
     public static final String offset = "offset";
-    public static final String OFFSET_VALUE = "1";
+    public static final String OFFSET_VALUE = "0";
     public static final String search = "search";
 
     // saving in prefs delimeter separated
@@ -31,6 +31,7 @@ public final class Constants {
     // is it a relation
     public static final String RELATION = "relation";
     public static final String ROOM_ID = "room_id";
+    public static final String CHAT_HEADER = "chat_header";
 
     // added for types of request status
     public static final String PENDING_STATUS = "pending";

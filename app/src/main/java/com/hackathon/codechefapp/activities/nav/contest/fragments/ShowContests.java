@@ -59,6 +59,8 @@ public class ShowContests extends Fragment implements OnItemClickListener {
 
         progressBar = view.findViewById(R.id.progressBar);
 
+        ((ContestActivity)getActivity()).getSupportActionBar().setTitle("Contests");
+
         contestsRecyclerView = view.findViewById(R.id.contestsRecyclerView);
         contestsRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
         contestsRecyclerView.setHasFixedSize(false);
@@ -110,9 +112,10 @@ public class ShowContests extends Fragment implements OnItemClickListener {
 
     @Override
     public void onItemClick(View view, int position) {
-        Log.d("work" , position + " " + contestList.get(position).getCode());
+        Log.d(TAG , position + " " + contestList.get(position).getCode());
         if (contestList != null && contestList.size() > position) {
             ((ContestActivity) activity).showProblemsFragment(contestList.get(position).getCode());
+            ((ContestActivity)getActivity()).getSupportActionBar().setTitle(contestList.get(position).getCode());
         }
     }
 

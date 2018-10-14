@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.hackathon.codechefapp.R;
 import com.hackathon.codechefapp.adapter.SearchAdapter;
@@ -41,6 +42,8 @@ public class ApprovedStudents extends Fragment implements OnItemClickListener {
     private RecyclerView.LayoutManager layoutManager;
     private SearchAdapter adapter;
 
+    private TextView noApprovedStudentsTxt;
+
     private SharedPreferenceUtils prefs;
 
     @Override
@@ -54,6 +57,8 @@ public class ApprovedStudents extends Fragment implements OnItemClickListener {
         approvedStudentsRecyclerView = view.findViewById(R.id.approvedStudentsRecyclerView);
         approvedStudentsRecyclerView.setHasFixedSize(false);
         approvedStudentsRecyclerView.setLayoutManager(layoutManager);
+
+        noApprovedStudentsTxt = (TextView) view.findViewById(R.id.noApprovedStudentsTxt);
 
         activity = getActivity();
 
@@ -115,8 +120,9 @@ public class ApprovedStudents extends Fragment implements OnItemClickListener {
                 adapter = new SearchAdapter(approvedStudents);
                 adapter.setItemClickListener(this);
                 approvedStudentsRecyclerView.setAdapter(adapter);
+            } else {
+                noApprovedStudentsTxt.setVisibility(View.VISIBLE);
             }
-
         } else {
             DisplayToast.makeSnackbar(getView().getRootView(), getString(R.string.error_message));
         }
@@ -125,12 +131,12 @@ public class ApprovedStudents extends Fragment implements OnItemClickListener {
     @Override
     public void onItemClick(View view, int position) {
         if (approvedStudents != null && approvedStudents.size() > position) {
-            startActivityCodechefUser(approvedStudents.get(position).getUsername(), Constants.APPROVED_STATUS , approvedStudents.get(position).getRoom_id());
+            startActivityCodechefUser(approvedStudents.get(position).getUsername(), Constants.APPROVED_STATUS + Constants.DELIMETER + Constants.STUDENT, approvedStudents.get(position).getRoom_id());
         }
     }
 
-    private void startActivityCodechefUser(String userName, String relationStatus , String roomId) {
-        ((MyStudents) activity).startActivityCodechefUser(userName, relationStatus , roomId);
+    private void startActivityCodechefUser(String userName, String relationStatus, String roomId) {
+        ((MyStudents) activity).startActivityCodechefUser(userName, relationStatus, roomId);
     }
 
     public void updateFragmentAdapter() {

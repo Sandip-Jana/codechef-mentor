@@ -1,11 +1,12 @@
 <resources>
 
-    <!-- Login Page -->
+    <!-- Login Page & Chat url -->
     <string name="app_name">Codechef Mentor</string>
     <string name="login">LOGIN</string>
     <string name="client_id">dd0b7e65f63265923d3686cdbbabf163</string>
     <string name="client_secret">1b13041d6b891cb3369b1218c15987c3</string>
-    <string name="redirect_to_backend">http://149.129.138.172/users/auth/codechef</string>
+    <string name="redirect_to_backend">http://149.129.145.214/users/auth/codechef</string>
+    <string name="chat_url">http://149.129.145.214/cable?auth_code=</string>
     <string name="redirect_uri">mentor://callback</string>
     <string name="response_type">code</string>
     <string name="refresh_token">refresh_token</string>
@@ -65,5 +66,17 @@
     <string name="logout">Logout</string>
     <string name="share">Share</string>
     <string name="save_as_pdf">Save as PDF</string>
+
+
+    <!-- Activity Headers -->
+    <string name="search_header">Search Users</string>
+    <string name="my_profile_header">My Profile</string>
+    <string name="user_profile_header">Codechef User</string>
+    <string name="my_students_header">My Students</string>
+    <string name="my_mentors_header">My Mentors</string>
+    <string name="chat">Chat</string>
+    <string name="leaderboard_heading">LeaderBoard</string>
+    <string name="contest_header">Contests</string>
+    <string name="dev_header">Devs</string>
 
 </resources>

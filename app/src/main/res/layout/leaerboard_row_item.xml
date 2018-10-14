@@ -4,6 +4,9 @@
     android:id="@+id/searchCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:adjustViewBounds="true"
     android:layout_marginTop="2dp"
     card_view:cardCornerRadius="4dp">
 

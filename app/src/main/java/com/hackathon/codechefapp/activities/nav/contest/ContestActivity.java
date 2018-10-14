@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.hackathon.codechefapp.R;
@@ -59,6 +58,20 @@ public class ContestActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (pager.getCurrentItem() != 0) {
+            if (pager.getCurrentItem() == 2)
+                pager.setCurrentItem(0, true);
+            else {
+                pager.setCurrentItem(2, true);
+                getSupportActionBar().setTitle(prefs.getStringValue(PreferenceConstants.CONTESTCODE , ""));
+            }
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private class PagerAdapter extends FragmentPagerAdapter {

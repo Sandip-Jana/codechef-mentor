@@ -8,7 +8,7 @@ public final class URLConstants {
 
     public static final String BASE_API = "https://api.codechef.com/";
 
-    public static final String BASE_API2 = "http://149.129.138.172/";
+    public static final String BASE_API2 = "http://149.129.145.214/";
 
     public static final String OATH = "oauth/token";
 

@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".activities.Student.ApprovedStudents">
+
+    <TextView
+        android:id="@+id/noApprovedStudentsTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="2dp"
+        android:text="This tab shows the list of accepted students once you accept their request fom Pending Requests tab"
+        android:textSize="@dimen/font_size_medium"
+        android:textStyle="bold"
+        android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/approvedStudentsRecyclerView"
@@ -13,4 +26,4 @@
 
     </android.support.v7.widget.RecyclerView>
 
-</LinearLayout>
+</RelativeLayout>

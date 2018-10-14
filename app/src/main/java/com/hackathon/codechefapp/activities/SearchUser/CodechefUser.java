@@ -267,6 +267,8 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
 
         username.setText(content.getUsername());
 
+        getSupportActionBar().setTitle(username.getText().toString());
+
         allContestRating.setText(content.getRatings().getAllContest().toString());
 
         myGlobalRank.setText(content.getRankings().getAllContestRanking().getGlobal().toString());
@@ -431,6 +433,7 @@ public class CodechefUser extends AppCompatActivity implements OnChartValueSelec
             return;
         }
         intent.putExtra(Constants.ROOM_ID , this.roomId);
+        intent.putExtra(Constants.CHAT_HEADER , username.getText().toString());
         startActivity(intent);
     }
 

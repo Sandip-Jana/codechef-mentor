@@ -80,6 +80,30 @@ public class ChatActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null && bundle.containsKey(Constants.ROOM_ID)) {
             roomId = (String) bundle.get(Constants.ROOM_ID);
+
+            if (bundle.containsKey(Constants.CHAT_HEADER)) {
+                String tab_header = (String) bundle.get(Constants.CHAT_HEADER);
+                getSupportActionBar().setTitle(tab_header);
+            } else if (roomId != null && !roomId.isEmpty()) {
+                int chatRoomId = Integer.parseInt(roomId);
+                switch (chatRoomId) {
+                    case -1:
+                        getSupportActionBar().setTitle(R.string.general);
+                        break;
+                    case -2:
+                        getSupportActionBar().setTitle(R.string.ioi);
+                        break;
+                    case -3:
+                        getSupportActionBar().setTitle(R.string.acm);
+                        break;
+                    case -4:
+                        getSupportActionBar().setTitle(R.string.placements_discuss);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
         } else {
             Log.d(TAG, "RoomId not fetched");
             return;
@@ -120,7 +144,7 @@ public class ChatActivity extends AppCompatActivity {
 
         URI uri = null;
         try {
-            uri = new URI("http://149.129.138.172/cable?auth_code="+prefs.getStringValue(PreferenceConstants.AUTH_CODE , ""));
+            uri = new URI(getString(R.string.chat_url) + prefs.getStringValue(PreferenceConstants.AUTH_CODE, ""));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -186,11 +210,11 @@ public class ChatActivity extends AppCompatActivity {
                     subscription.perform("send_message", params);
 
                 } else if (!isConnected) {
-                    hideKeyboard( ChatActivity.this );
+                    hideKeyboard(ChatActivity.this);
                     DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), "An unauthorized connection attempt was rejected");
 
                 } else {
-                    hideKeyboard( ChatActivity.this );
+                    hideKeyboard(ChatActivity.this);
                     DisplayToast.makeSnackbar(getWindow().getDecorView().getRootView(), "Message cant be empty");
                 }
             }

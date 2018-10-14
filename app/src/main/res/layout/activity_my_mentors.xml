@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="232dp"
         android:paddingTop="1dp"
-        android:src="@drawable/my_student"/>
+        android:background="@drawable/my_student"/>
 
     <View
         android:layout_width="match_parent"

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.hackathon.codechefapp.R;
 import com.hackathon.codechefapp.adapter.StudentRequestAdapter;
@@ -44,6 +45,8 @@ public class PendingStudentRequests extends Fragment implements OnItemClickListe
     private RecyclerView pendingStudentRequestsRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
 
+    private TextView noStudentRequestsTxt;
+
     private StudentRequestAdapter pendingRequestsAdapter;
 
     @Override
@@ -57,6 +60,8 @@ public class PendingStudentRequests extends Fragment implements OnItemClickListe
         pendingStudentRequestsRecyclerView = view.findViewById(R.id.pendingStudentRequestsRecyclerView);
         pendingStudentRequestsRecyclerView.setHasFixedSize(false);
         pendingStudentRequestsRecyclerView.setLayoutManager(layoutManager);
+
+        noStudentRequestsTxt = view.findViewById(R.id.noStudentRequestsTxt);
 
         activity = getActivity();
         prefs = SharedPreferenceUtils.getInstance(activity.getApplicationContext());
@@ -116,8 +121,9 @@ public class PendingStudentRequests extends Fragment implements OnItemClickListe
                 pendingRequestsAdapter = new StudentRequestAdapter(pendingStudentRequests);
                 pendingRequestsAdapter.setItemClickListener(this);
                 pendingStudentRequestsRecyclerView.setAdapter(pendingRequestsAdapter);
+            } else {
+                noStudentRequestsTxt.setVisibility(View.VISIBLE);
             }
-
         } else {
             DisplayToast.makeSnackbar(getView().getRootView(), getString(R.string.error_message));
         }
@@ -125,14 +131,22 @@ public class PendingStudentRequests extends Fragment implements OnItemClickListe
 
     @Override
     public void onItemClick(View view, int position) {
-        if (view.getId() == R.id.acceptBtn) {
-            callPutApiAcceptReject(pendingStudentRequests.get(position).getUsername(), Constants.APPROVED_STATUS , pendingStudentRequests.get(position).getRoom_id());
-        } else if (view.getId() == R.id.rejectBtn) {
-            callPutApiAcceptReject(pendingStudentRequests.get(position).getUsername(), Constants.REJECTED_STATUS , pendingStudentRequests.get(position).getRoom_id());
+        switch (view.getId()) {
+            case R.id.acceptBtn:
+                callPutApiAcceptReject(pendingStudentRequests.get(position).getUsername(), Constants.APPROVED_STATUS, pendingStudentRequests.get(position).getRoom_id());
+                break;
+            case R.id.rejectBtn:
+                callPutApiAcceptReject(pendingStudentRequests.get(position).getUsername(), Constants.REJECTED_STATUS, pendingStudentRequests.get(position).getRoom_id());
+                break;
+            case R.id.userDetailsLayout:
+                startActivityCodechefUser(pendingStudentRequests.get(position).getUsername(), Constants.PENDING_STATUS + Constants.DELIMETER + Constants.STUDENT, pendingStudentRequests.get(position).getRoom_id());
+                break;
+            default:
+                break;
         }
     }
 
-    private void callPutApiAcceptReject(final String username, final String status , String roomId) {
+    private void callPutApiAcceptReject(final String username, final String status, String roomId) {
         Retrofit retrofit = new RetrofitClient().getAlibabaCookiesApi(activity);
         IChef ichef = retrofit.create(IChef.class);
 
@@ -151,7 +165,7 @@ public class PendingStudentRequests extends Fragment implements OnItemClickListe
                         if (status.length() > 0)
                             DisplayToast.makeSnackbar(getView().getRootView(), "Request " + status.substring(0, 1).toUpperCase() + status.substring(1));
 
-                        startActivityCodechefUser();
+                        refreshFragments();
                         updateFragmentAdapter(username);
 
                     } else {
@@ -169,8 +183,12 @@ public class PendingStudentRequests extends Fragment implements OnItemClickListe
         });
     }
 
-    private void startActivityCodechefUser() {
+    private void refreshFragments() {
         ((MyStudents) activity).refreshBothFragments();
+    }
+
+    private void startActivityCodechefUser(String userName, String relationStatus, String roomId) {
+        ((MyStudents) activity).startActivityCodechefUser(userName, relationStatus, roomId);
     }
 
     private void updateFragmentAdapter(String username) {

@@ -38,8 +38,7 @@ import retrofit2.Retrofit;
 public class ShowProblemsFragment extends Fragment implements OnItemClickListener {
 
     private static final String TAG = ShowProblemsFragment.class.getSimpleName();
-    private TextView contestCodeTxt;
-    private TextView contestName;
+    private TextView contestNameTxt;
     private TextView noDataTxt;
     private ImageView bannerFile;
 
@@ -55,7 +54,6 @@ public class ShowProblemsFragment extends Fragment implements OnItemClickListene
 
     private SharedPreferenceUtils prefs;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_show_problems, container, false);
@@ -67,8 +65,7 @@ public class ShowProblemsFragment extends Fragment implements OnItemClickListene
 
         prefs = SharedPreferenceUtils.getInstance(activity.getApplicationContext());
 
-        contestName = view.findViewById(R.id.contestName);
-        contestCodeTxt = view.findViewById(R.id.contestCode);
+        contestNameTxt = view.findViewById(R.id.contestName);
         noDataTxt = view.findViewById(R.id.noDataTxt);
         bannerFile = view.findViewById(R.id.bannerFile);
 
@@ -117,9 +114,7 @@ public class ShowProblemsFragment extends Fragment implements OnItemClickListene
                     .error(R.drawable.codechef_face)
                     .into(bannerFile);
 
-            contestCodeTxt.setText(contestCode);
-            contestName.setText(response.getResult().getData().getContent().getName());
-
+            contestNameTxt.setText(response.getResult().getData().getContent().getName());
             problemsList = response.getResult().getData().getContent().getProblemsList();
 
             if (problemsList != null && problemsList.size() > 0) {
@@ -142,9 +137,10 @@ public class ShowProblemsFragment extends Fragment implements OnItemClickListene
 
     @Override
     public void onItemClick(View view, int position) {
-        Log.d("work" , position + "  showProblemsFra "+ problemsList.get(position).getProblemCode() );
+        Log.d(TAG, position + "  showProblemsFragment " + problemsList.get(position).getProblemCode());
         if (problemsList != null && problemsList.size() > position) {
-            ((ContestActivity) activity).showProblemBody(problemsList.get(position).getProblemCode() , problemsList.get(position).getContestCode());
+            ((ContestActivity) activity).showProblemBody(problemsList.get(position).getProblemCode(), problemsList.get(position).getContestCode());
+            ((ContestActivity) getActivity()).getSupportActionBar().setTitle(problemsList.get(position).getProblemCode());
         }
     }
 
